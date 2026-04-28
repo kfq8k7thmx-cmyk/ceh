@@ -185,7 +185,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
   </div>
   <div class="mets"><div class="met mb"><div class="mv" id="adm-p">0</div><div class="ml">изделий</div></div><div class="met mg"><div class="mv" id="adm-e">0 ₽</div><div class="ml">к выплате</div></div><div class="met mr"><div class="mv" id="adm-b">0</div><div class="ml">брак</div></div></div>
   <div class="scroll"><div id="adm-alerts"></div><div class="slbl">Работники — нажми для деталей</div><div id="adm-workers"></div><button class="tabel-open-btn" onclick="goTab()">📋 Табель за месяц</button>
-<button class="tabel-open-btn" style="background:#EEEDFE;color:#534AB7" onclick="goStaff()">👤 Управление сотрудниками</button></div>
+<button class="tabel-open-btn" style="background:#EEEDFE;color:#534AB7" onclick="goStaff()">👤 Управление сотрудниками</button>
+<button class="tabel-open-btn" style="background:#EAF3DE;color:#3B6D11" onclick="goStock()">📦 Склад готовой продукции</button></div>
 </div>
 <div class="screen" id="sc-tab">
   <div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-admin')">‹</div><div style="flex:1"><div class="tb-title">Табель — <span id="tab-month-lbl"></span></div><div class="tb-sub">нажми работника — по дням</div></div></div>
@@ -210,6 +211,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
   <div class="scroll">
     <div class="slbl">Список сотрудников</div>
     <div id="staff-list"></div>
+    <button onclick="openAddStaff()" style="margin:0 16px 16px;width:calc(100% - 32px);padding:14px;background:var(--green-l);color:var(--green);border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">+ Добавить сотрудника</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+
+<div class="screen" id="sc-stock">
+  <div class="topbar" style="gap:10px">
+    <div class="back-btn" onclick="goScreen('sc-admin')">‹</div>
+    <div style="flex:1"><div class="tb-title">Склад готовой продукции</div><div class="tb-sub">что упаковано и когда</div></div>
+  </div>
+  <div class="scroll">
+    <div id="stock-summary" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 16px 4px"></div>
+    <div class="slbl">История упаковки по дням</div>
+    <div id="stock-list"></div>
     <div class="spacer"></div>
   </div>
 </div>
@@ -255,6 +270,52 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
     <button class="btn-cancel" onclick="closeOv()">Отмена</button>
   </div>
 </div>
+
+<div class="overlay" id="ov-new-staff" onclick="ovBg(event,'ov-new-staff')">
+  <div class="sheet">
+    <div class="sheet-top"><div class="sheet-handle"></div>
+      <div class="sh-title">Новый сотрудник</div>
+      <div class="sh-sub">Заполни данные — появится в списке</div>
+    </div>
+    <div class="field"><div class="field-lbl">Имя сотрудника</div><input id="new-nm" placeholder="Например: Виктор" autocomplete="off"></div>
+    <div class="field">
+      <div class="field-lbl">PIN-код (4 цифры)</div>
+      <input id="new-pin" type="number" inputmode="numeric" placeholder="6666" autocomplete="off">
+    </div>
+    <div class="field">
+      <div class="field-lbl">Роль</div>
+      <div id="new-roles" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px"></div>
+    </div>
+    <button class="btn-primary btn-green" onclick="saveNewStaff()">Добавить</button>
+    <button class="btn-cancel" onclick="closeOv()">Отмена</button>
+  </div>
+</div>
+
+<div class="overlay" id="ov-edit-task" onclick="ovBg(event,'ov-edit-task')">
+  <div class="sheet">
+    <div class="sheet-top"><div class="sheet-handle"></div>
+      <div class="sh-title" id="etask-title">Редактировать задачу</div>
+      <div class="sh-sub">Измени или удали этот этап</div>
+    </div>
+    <div class="field"><div class="field-lbl">Название</div><input id="etask-nm" placeholder="Название" autocomplete="off"></div>
+    <div class="field"><div class="field-lbl">Ставка ₽ за 1 штуку</div><input id="etask-rate" type="number" inputmode="numeric" placeholder="50" autocomplete="off"></div>
+    <div class="field"><div class="field-lbl">Выход с листа (штук)</div>
+      <div class="stpr-yld"><button onclick="etaskYld(-1)">−</button><span id="etask-yld-v">4</span><button onclick="etaskYld(1)">+</button></div>
+    </div>
+    <div class="field"><div class="field-lbl">Иконка</div>
+      <div class="ico-grid" id="etask-icos">
+        <div class="ico-opt sel" onclick="etaskIco(0)">🪑</div><div class="ico-opt" onclick="etaskIco(1)">🟤</div>
+        <div class="ico-opt" onclick="etaskIco(2)">⭐</div><div class="ico-opt" onclick="etaskIco(3)">🔶</div>
+        <div class="ico-opt" onclick="etaskIco(4)">🌿</div><div class="ico-opt" onclick="etaskIco(5)">💎</div>
+        <div class="ico-opt" onclick="etaskIco(6)">🌀</div><div class="ico-opt" onclick="etaskIco(7)">🔺</div>
+        <div class="ico-opt" onclick="etaskIco(8)">🎯</div><div class="ico-opt" onclick="etaskIco(9)">🟡</div>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="etaskSave()">Сохранить</button>
+    <button class="btn-primary" style="background:#FCEBEB;color:#A32D2D;margin-top:0" onclick="etaskDelete()">Удалить этот этап</button>
+    <button class="btn-cancel" onclick="closeOv()">Отмена</button>
+  </div>
+</div>
 <div class="toast-wrap" id="tw" style="display:none"><div class="toast" id="t-el"><div class="toast-dot" id="t-dot"></div><div class="toast-txt" id="t-txt"></div></div></div>
 </div>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -272,15 +333,25 @@ window.addEventListener('load',function(){
     var d=s.val()||{};
     ['cnc','carp','sand','paint','pack'].forEach(function(r){localTasks[r]=d[r]?Object.values(d[r]):[];});
 
-    // Загрузить имена сотрудников из Firebase
+    // Загрузить всех сотрудников из Firebase
     db.ref('users').once('value').then(function(us){
       var ud = us.val() || {};
+      var avColors = ['background:#E6F1FB;color:#0C447C','background:#E1F5EE;color:#085041','background:#FAEEDA;color:#633806','background:#FAECE7;color:#712B13','background:#EEEDFE;color:#534AB7','background:#FCEBEB;color:#A32D2D','background:#EAF3DE;color:#3B6D11'];
+      // Обновить существующих
       USERS.forEach(function(u){
         if(ud[u.id]){
           u.name = ud[u.id].name || u.name;
           u.pin = ud[u.id].pin || u.pin;
           u.role = ud[u.id].role || u.role;
           u.init = u.name.slice(0,2).toUpperCase();
+          delete ud[u.id];
+        }
+      });
+      // Добавить новых которых нет в дефолтном списке
+      Object.keys(ud).forEach(function(uid){
+        var u = ud[uid];
+        if(u && u.name){
+          USERS.push({id:uid, name:u.name, init:u.name.slice(0,2).toUpperCase(), role:u.role||'cnc', pin:u.pin||'0000', avS:avColors[USERS.length % avColors.length]});
         }
       });
       renderUsers();
@@ -291,6 +362,63 @@ window.addEventListener('load',function(){
 });
 
 var editIdx = -1;
+
+var newStaffRole = 'cnc';
+
+function openAddStaff(){
+  newStaffRole = 'cnc';
+  document.getElementById('new-nm').value = '';
+  document.getElementById('new-pin').value = '';
+  renderRoleButtons('new-roles', newStaffRole, function(r){ newStaffRole = r; renderRoleButtons('new-roles', newStaffRole, null); });
+  openOv('ov-new-staff');
+}
+
+function renderRoleButtons(containerId, selectedRole, onSelect){
+  var roles = ['cnc','carp','sand','paint','pack'];
+  var roleNames = {cnc:'ЧПУ-оператор',carp:'Столяр',sand:'Шлифовщик',paint:'Маляр',pack:'Упаковщик'};
+  var rc = document.getElementById(containerId);
+  rc.innerHTML = '';
+  roles.forEach(function(r){
+    var btn = document.createElement('div');
+    btn.style.cssText = 'padding:10px;border-radius:10px;border:1.5px solid '+(selectedRole===r?'var(--blue)':'var(--border)')+';background:'+(selectedRole===r?'var(--blue-l)':'var(--bg)')+';text-align:center;cursor:pointer;font-size:12px;font-weight:'+(selectedRole===r?'600':'400')+';color:'+(selectedRole===r?'var(--blue)':'var(--sub)');
+    btn.textContent = roleNames[r];
+    btn.onclick = function(){
+      if(containerId==='new-roles'){ newStaffRole=r; renderRoleButtons('new-roles',newStaffRole,null); }
+      else { USERS[editIdx].role=r; openEdit(editIdx); }
+    };
+    rc.appendChild(btn);
+  });
+}
+
+function saveNewStaff(){
+  var nm = document.getElementById('new-nm').value.trim();
+  var pin = document.getElementById('new-pin').value.trim();
+  if(!nm){ document.getElementById('new-nm').style.borderColor='#E24B4A'; return; }
+  if(pin.length !== 4 || isNaN(pin)){ document.getElementById('new-pin').style.borderColor='#E24B4A'; return; }
+  // Проверить уникальность PIN
+  var pinExists = USERS.some(function(u){ return u.pin === pin; });
+  if(pinExists){ document.getElementById('new-pin').style.borderColor='#E24B4A'; toast('Этот PIN уже занят', true); return; }
+  var newId = 'user_' + Date.now();
+  var avColors = [
+    'background:#E6F1FB;color:#0C447C',
+    'background:#E1F5EE;color:#085041',
+    'background:#FAEEDA;color:#633806',
+    'background:#FAECE7;color:#712B13',
+    'background:#EEEDFE;color:#534AB7',
+    'background:#FCEBEB;color:#A32D2D',
+    'background:#EAF3DE;color:#3B6D11',
+  ];
+  var avS = avColors[USERS.length % avColors.length];
+  var newUser = {id:newId, name:nm, init:nm.slice(0,2).toUpperCase(), role:newStaffRole, pin:pin, avS:avS};
+  USERS.push(newUser);
+  // Сохранить в Firebase
+  db.ref('users/'+newId).set({name:nm, pin:pin, role:newStaffRole});
+  renderStaff();
+  renderUsers();
+  toast(nm+' добавлен', false);
+  closeOv();
+}
+
 
 function goStaff(){
   renderStaff();
@@ -323,21 +451,7 @@ function openEdit(idx){
   sv('edit-sub', 'Роль: '+ROLE[u.role]);
   document.getElementById('edit-nm').value = u.name;
   document.getElementById('edit-pin').value = u.pin;
-  // Роли
-  var roles = ['cnc','carp','sand','paint','pack'];
-  var roleNames = {cnc:'ЧПУ-оператор',carp:'Столяр',sand:'Шлифовщик',paint:'Маляр',pack:'Упаковщик'};
-  var rc = document.getElementById('edit-roles');
-  rc.innerHTML = '';
-  roles.forEach(function(r){
-    var btn = document.createElement('div');
-    btn.style.cssText = 'padding:10px;border-radius:10px;border:1.5px solid '+(u.role===r?'var(--blue)':'var(--border)')+';background:'+(u.role===r?'var(--blue-l)':'var(--bg)')+';text-align:center;cursor:pointer;font-size:12px;font-weight:'+(u.role===r?'600':'400')+';color:'+(u.role===r?'var(--blue)':'var(--sub)');
-    btn.textContent = roleNames[r];
-    btn.onclick = function(){
-      USERS[editIdx].role = r;
-      openEdit(editIdx);
-    };
-    rc.appendChild(btn);
-  });
+  renderRoleButtons('edit-roles', u.role, null);
   openOv('ov-edit');
 }
 
@@ -388,7 +502,11 @@ function renderTiles(gid,role){
   var g=document.getElementById(gid);g.innerHTML='';
   (localTasks[role]||[]).forEach(function(t,i){
     var tile=document.createElement('div');tile.className='tile';
-    tile.innerHTML='<span class="tile-ico">'+t.ico+'</span><div class="tile-nm">'+t.nm+'</div><div class="tile-yl">'+t.rate+' ₽/шт</div>';
+    var ii=i;
+    tile.innerHTML='<div style="position:relative">'
+      +'<button onclick="event.stopPropagation();openEditTask(''+role+'','+ii+')" style="position:absolute;top:-8px;right:-4px;background:var(--bg);border:.5px solid var(--border);border-radius:6px;width:22px;height:22px;font-size:13px;cursor:pointer;color:var(--sub);display:flex;align-items:center;justify-content:center;z-index:1">✎</button>'
+      +'<span class="tile-ico">'+t.ico+'</span></div>'
+      +'<div class="tile-nm">'+t.nm+'</div><div class="tile-yl">'+t.rate+' ₽/шт</div>';
     tile.onclick=(function(task){return function(){openOp(task);};})(t);
     g.appendChild(tile);
   });
@@ -424,6 +542,128 @@ function startPacker(){
   var ref2=db.ref('ops/'+tdk()+'/dima/stock');
   ref2.on('value',function(s){sv('pack-s',s.val()||0);});
   fbL.push(ref2);
+}
+
+function goStock(){
+  var summary = document.getElementById('stock-summary');
+  var list = document.getElementById('stock-list');
+  summary.innerHTML = '<div style="grid-column:1/-1;font-size:12px;color:var(--ter);padding:4px 0">Загрузка...</div>';
+  list.innerHTML = '';
+
+  // Итого по изделиям
+  db.ref('stock').once('value').then(function(snap){
+    var data = snap.val() || {};
+    summary.innerHTML = '';
+    if(!Object.keys(data).length){
+      summary.innerHTML = '<div style="grid-column:1/-1;padding:20px;text-align:center;font-size:14px;color:var(--ter)">Склад пуст — упаковщик ещё ничего не сдал</div>';
+    } else {
+      Object.keys(data).forEach(function(nm){
+        var item = data[nm];
+        var card = document.createElement('div');
+        card.style.cssText = 'background:var(--green-l);border-radius:var(--rs);padding:12px 10px;text-align:center';
+        card.innerHTML = '<div style="font-size:22px;font-weight:700;color:var(--green)">'+(item.total||0)+'</div>'
+          +'<div style="font-size:11px;font-weight:600;color:var(--green);margin-top:2px">'+nm+'</div>'
+          +'<div style="font-size:10px;color:var(--green-v);margin-top:2px">последний: '+formatDate(item.lastDate)+'</div>';
+        summary.appendChild(card);
+      });
+    }
+  });
+
+  // История по дням — операции упаковщиков
+  db.ref('ops').once('value').then(function(snap){
+    var allOps = snap.val() || {};
+    list.innerHTML = '';
+    var packUsers = USERS.filter(function(u){ return u.role==='pack'; });
+    var days = Object.keys(allOps).sort().reverse();
+    days.forEach(function(dk){
+      var dayData = allOps[dk];
+      var hasStock = false;
+      var dayHtml = '';
+      packUsers.forEach(function(pu){
+        var ud = dayData[pu.id];
+        if(!ud || !ud.entries) return;
+        var entries = Object.values(ud.entries);
+        entries.forEach(function(op){
+          hasStock = true;
+          dayHtml += '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid var(--border)">'
+            +'<div style="font-size:20px">'+op.ico+'</div>'
+            +'<div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--text)">'+op.nm+'</div>'
+            +'<div style="font-size:11px;color:var(--sub)">упаковал: '+pu.name+' · '+op.time+'</div></div>'
+            +'<div style="text-align:right"><div style="font-size:14px;font-weight:700;color:var(--green)">'+op.pcs+' шт</div>'
+            +'<div style="font-size:11px;color:var(--sub)">'+fmt(op.earn)+'</div></div></div>';
+        });
+      });
+      if(hasStock){
+        var block = document.createElement('div');
+        block.style.cssText = 'margin:0 16px 12px;background:var(--card);border-radius:var(--r);border:.5px solid var(--border);overflow:hidden';
+        block.innerHTML = '<div style="padding:8px 14px;background:var(--bg);border-bottom:.5px solid var(--border)">'
+          +'<div style="font-size:12px;font-weight:600;color:var(--text)">'+formatDate(dk)+'</div></div>'
+          +'<div style="padding:0 14px">'+dayHtml+'</div>';
+        list.appendChild(block);
+      }
+    });
+    if(!list.children.length){
+      list.innerHTML = '<div style="padding:20px 16px;text-align:center;font-size:13px;color:var(--ter)">Нет данных об упаковке</div>';
+    }
+  });
+  goScreen('sc-stock');
+}
+
+function formatDate(dk){
+  if(!dk) return '';
+  try{ return new Date(dk+'T12:00:00').toLocaleDateString('ru',{day:'numeric',month:'long',year:'numeric'}); }
+  catch(e){ return dk; }
+}
+
+var etaskRole = '';
+var etaskIdx = -1;
+var etaskIcoIdx = 0;
+var etaskYldV = 4;
+
+function openEditTask(role, idx){
+  etaskRole = role;
+  etaskIdx = idx;
+  var t = localTasks[role][idx];
+  sv('etask-title', t.nm);
+  document.getElementById('etask-nm').value = t.nm;
+  document.getElementById('etask-rate').value = t.rate;
+  etaskYldV = t.yld || 1;
+  sv('etask-yld-v', etaskYldV);
+  etaskIcoIdx = ICOS.indexOf(t.ico);
+  if(etaskIcoIdx < 0) etaskIcoIdx = 0;
+  document.querySelectorAll('#etask-icos .ico-opt').forEach(function(o,i){ o.className='ico-opt'+(i===etaskIcoIdx?' sel':''); });
+  openOv('ov-edit-task');
+}
+function etaskYld(d){ etaskYldV=Math.max(1,etaskYldV+d); sv('etask-yld-v',etaskYldV); }
+function etaskIco(i){ etaskIcoIdx=i; document.querySelectorAll('#etask-icos .ico-opt').forEach(function(o,j){ o.className='ico-opt'+(j===i?' sel':''); }); }
+function etaskSave(){
+  var nm = document.getElementById('etask-nm').value.trim();
+  var rate = parseInt(document.getElementById('etask-rate').value)||0;
+  if(!nm){ document.getElementById('etask-nm').style.borderColor='#E24B4A'; return; }
+  localTasks[etaskRole][etaskIdx].nm = nm;
+  localTasks[etaskRole][etaskIdx].rate = rate;
+  localTasks[etaskRole][etaskIdx].yld = etaskYldV;
+  localTasks[etaskRole][etaskIdx].ico = ICOS[etaskIcoIdx];
+  // Пересохранить в Firebase
+  db.ref('tasks/'+etaskRole).set(localTasks[etaskRole]);
+  // Перерендерить если это текущий экран рабочего
+  reRenderCurrentTiles();
+  toast(nm+' — сохранено', false);
+  closeOv();
+}
+function etaskDelete(){
+  var nm = localTasks[etaskRole][etaskIdx].nm;
+  localTasks[etaskRole].splice(etaskIdx, 1);
+  db.ref('tasks/'+etaskRole).set(localTasks[etaskRole]);
+  reRenderCurrentTiles();
+  toast(nm+' — удалено', false);
+  closeOv();
+}
+function reRenderCurrentTiles(){
+  if(document.getElementById('cnc-tiles')) renderTiles('cnc-tiles','cnc');
+  if(document.getElementById('carp-tiles')) renderTiles('carp-tiles','carp');
+  if(document.getElementById('work-tiles') && CU) renderTiles('work-tiles',CU.role);
+  if(document.getElementById('pack-tiles')) renderTiles('pack-tiles','pack');
 }
 function startAdmin(){admDayI=0;admDates=[];for(var i=0;i<30;i++){var d=new Date();d.setDate(d.getDate()-i);admDates.push(d.toISOString().slice(0,10));}renderAdmDay();}
 function admDay(d){admDayI=Math.max(0,Math.min(admDates.length-1,admDayI+d));renderAdmDay();}
