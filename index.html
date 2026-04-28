@@ -184,13 +184,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
     <button class="dn-btn" onclick="admDay(1)">›</button>
   </div>
   <div class="mets"><div class="met mb"><div class="mv" id="adm-p">0</div><div class="ml">изделий</div></div><div class="met mg"><div class="mv" id="adm-e">0 ₽</div><div class="ml">к выплате</div></div><div class="met mr"><div class="mv" id="adm-b">0</div><div class="ml">брак</div></div></div>
-  <div class="scroll"><div id="adm-alerts"></div><div class="slbl">Работники — нажми для деталей</div><div id="adm-workers"></div><button class="tabel-open-btn" onclick="goTab()">📋 Табель за месяц</button></div>
+  <div class="scroll"><div id="adm-alerts"></div><div class="slbl">Работники — нажми для деталей</div><div id="adm-workers"></div><button class="tabel-open-btn" onclick="goTab()">📋 Табель за месяц</button>
+<button class="tabel-open-btn" style="background:#EEEDFE;color:#534AB7" onclick="goStaff()">👤 Управление сотрудниками</button></div>
 </div>
 <div class="screen" id="sc-tab">
   <div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-admin')">‹</div><div style="flex:1"><div class="tb-title">Табель — <span id="tab-month-lbl"></span></div><div class="tb-sub">нажми работника — по дням</div></div></div>
   <div class="scroll">
     <div class="tab-banner"><div><div class="tab-lbl">Начислено</div><div class="tab-val" id="tab-tot">0 ₽</div></div><div style="text-align:right"><div class="tab-lbl">Выплачено</div><div class="tab-val" id="tab-paid2">0 ₽</div><div class="tab-debt" id="tab-debt">долг: 0 ₽</div></div></div>
     <div class="slbl">По каждому работнику</div><div id="tab-workers"></div><div class="spacer"></div>
+  </div>
+</div>
+
+<div class="screen" id="sc-pack">
+  <div class="topbar"><div><div class="tb-title" id="pack-name">Дмитрий</div><div class="tb-sub">Упаковщик</div></div><div class="tb-av" id="pack-av" onclick="logout()"></div></div>
+  <div class="mets"><div class="met mb"><div class="mv" id="pack-d">0</div><div class="ml">упаковал</div></div><div class="met mg"><div class="mv" id="pack-e">0 ₽</div><div class="ml">заработал</div></div><div class="met" style="background:#EEEDFE"><div class="mv" id="pack-s" style="color:#534AB7">0</div><div class="ml" style="color:#7F77DD">на склад</div></div></div>
+  <div class="slbl">Выбери изделие</div>
+  <div class="scroll"><div class="tiles" id="pack-tiles"></div></div>
+</div>
+
+<div class="screen" id="sc-staff">
+  <div class="topbar" style="gap:10px">
+    <div class="back-btn" onclick="goScreen('sc-admin')">‹</div>
+    <div style="flex:1"><div class="tb-title">Сотрудники</div><div class="tb-sub">нажми — изменить имя и PIN</div></div>
+  </div>
+  <div class="scroll">
+    <div class="slbl">Список сотрудников</div>
+    <div id="staff-list"></div>
+    <div class="spacer"></div>
   </div>
 </div>
 <div class="overlay" id="ov-op" onclick="ovBg(event,'ov-op')">
@@ -203,11 +223,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
   <div class="earn-txt" id="op-earn"></div>
   <button class="btn-primary" onclick="opSave()">Записать</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div>
 </div>
-<div class="overlay" id="ov-3s" onclick="ovBg(event,'ov-3s')">
-  <div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" id="s3-title">Задача</div><div class="sh-sub">Отметь выполненные этапы</div></div>
-  <div id="s3-body"></div><div class="earn-txt" id="s3-earn"></div>
-  <button class="btn-primary" onclick="s3Save()">Записать всё</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div>
-</div>
+
 <div class="overlay" id="ov-add" onclick="ovBg(event,'ov-add')">
   <div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" id="add-title">Новая задача</div><div class="sh-sub">Заполни — появится на экране</div></div>
   <div class="field"><div class="field-lbl">Название</div><input id="add-nm" placeholder="Название задачи" autocomplete="off"></div>
@@ -219,6 +235,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
   </div></div>
   <button class="btn-primary btn-green" onclick="addSave()">Добавить</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div>
 </div>
+
+<div class="overlay" id="ov-edit" onclick="ovBg(event,'ov-edit')">
+  <div class="sheet">
+    <div class="sheet-top"><div class="sheet-handle"></div>
+      <div class="sh-title" id="edit-title">Редактировать</div>
+      <div class="sh-sub" id="edit-sub">Измени имя и PIN-код</div>
+    </div>
+    <div class="field"><div class="field-lbl">Имя сотрудника</div><input id="edit-nm" placeholder="Имя" autocomplete="off"></div>
+    <div class="field">
+      <div class="field-lbl">PIN-код (4 цифры)</div>
+      <input id="edit-pin" type="number" inputmode="numeric" placeholder="0000" maxlength="4" autocomplete="off">
+    </div>
+    <div class="field">
+      <div class="field-lbl">Роль</div>
+      <div id="edit-roles" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px"></div>
+    </div>
+    <button class="btn-primary" onclick="editSave()">Сохранить</button>
+    <button class="btn-cancel" onclick="closeOv()">Отмена</button>
+  </div>
+</div>
 <div class="toast-wrap" id="tw" style="display:none"><div class="toast" id="t-el"><div class="toast-dot" id="t-dot"></div><div class="toast-txt" id="t-txt"></div></div></div>
 </div>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -226,19 +262,100 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
 <script>
 firebase.initializeApp({apiKey:"AIzaSyCO9AZEt67j5KYRH6p8RnU6fl_Zjsg4f28",authDomain:"mebelcex-e3553.firebaseapp.com",databaseURL:"https://mebelcex-e3553-default-rtdb.europe-west1.firebasedatabase.app",projectId:"mebelcex-e3553",storageBucket:"mebelcex-e3553.firebasestorage.app",messagingSenderId:"694070291893",appId:"1:694070291893:web:9ca93e1a1b0c8874f53dfc"});
 var db=firebase.database();
-var USERS=[{id:'admin',name:'Владелец',init:'ВЫ',role:'admin',pin:'0000',avS:'background:#FAEEDA;color:#633806'},{id:'alex',name:'Алексей',init:'АЛ',role:'cnc',pin:'1111',avS:'background:#E6F1FB;color:#0C447C'},{id:'mikh',name:'Михаил',init:'МХ',role:'carp',pin:'2222',avS:'background:#E1F5EE;color:#085041'},{id:'serg',name:'Сергей',init:'СР',role:'sand',pin:'3333',avS:'background:#FAEEDA;color:#633806'},{id:'ivan',name:'Иван',init:'ИВ',role:'paint',pin:'4444',avS:'background:#FAECE7;color:#712B13'}];
-var ROLE={admin:'Администратор',cnc:'ЧПУ-оператор',carp:'Столяр',sand:'Шлифовщик',paint:'Маляр'};
+var USERS=[{id:'admin',name:'Владелец',init:'ВЫ',role:'admin',pin:'0000',avS:'background:#FAEEDA;color:#633806'},{id:'alex',name:'Алексей',init:'АЛ',role:'cnc',pin:'1111',avS:'background:#E6F1FB;color:#0C447C'},{id:'mikh',name:'Михаил',init:'МХ',role:'carp',pin:'2222',avS:'background:#E1F5EE;color:#085041'},{id:'serg',name:'Сергей',init:'СР',role:'sand',pin:'3333',avS:'background:#FAEEDA;color:#633806'},{id:'ivan',name:'Иван',init:'ИВ',role:'paint',pin:'4444',avS:'background:#FAECE7;color:#712B13'},{id:'dima',name:'Дмитрий',init:'ДМ',role:'pack',pin:'5555',avS:'background:#EEEDFE;color:#534AB7'}];
+var ROLE={admin:'Администратор',cnc:'ЧПУ-оператор',carp:'Столяр',sand:'Шлифовщик',paint:'Маляр',pack:'Упаковщик'};
 var ICOS=['🪑','🟤','⭐','🔶','🌿','💎','🌀','🔺','🎯','🟡'];
-var CU=null,selU=null,pinBuf='',opCtx={q:1,b:0,rate:50,uid:'',nm:'',ico:'🪑',stage:''},s3Qty=[1,1,1],s3Rate=0,s3Uid='',s3Nm='',s3Ico='🪑',addYldV=4,addIcoIdx=0,addForRole='',admDayI=0,admDates=[],localTasks={cnc:[],carp:[],sand:[],paint:[]},paidData={},fbL=[];
+var CU=null,selU=null,pinBuf='',opCtx={q:1,b:0,rate:50,uid:'',nm:'',ico:'🪑',stage:''},addYldV=4,addIcoIdx=0,addForRole='',admDayI=0,admDates=[],localTasks={cnc:[],carp:[],sand:[],paint:[],pack:[]},paidData={},fbL=[];
 function tdk(){return new Date().toISOString().slice(0,10);}
 window.addEventListener('load',function(){
   db.ref('tasks').once('value').then(function(s){
     var d=s.val()||{};
-    ['cnc','carp','sand','paint'].forEach(function(r){localTasks[r]=d[r]?Object.values(d[r]):[];});
-    renderUsers();
+    ['cnc','carp','sand','paint','pack'].forEach(function(r){localTasks[r]=d[r]?Object.values(d[r]):[];});
+
+    // Загрузить имена сотрудников из Firebase
+    db.ref('users').once('value').then(function(us){
+      var ud = us.val() || {};
+      USERS.forEach(function(u){
+        if(ud[u.id]){
+          u.name = ud[u.id].name || u.name;
+          u.pin = ud[u.id].pin || u.pin;
+          u.role = ud[u.id].role || u.role;
+          u.init = u.name.slice(0,2).toUpperCase();
+        }
+      });
+      renderUsers();
+    }).catch(function(){ renderUsers(); });
+
     setTimeout(function(){document.getElementById('loading').classList.add('hide');},600);
   }).catch(function(){renderUsers();setTimeout(function(){document.getElementById('loading').classList.add('hide');},600);});
 });
+
+var editIdx = -1;
+
+function goStaff(){
+  renderStaff();
+  goScreen('sc-staff');
+}
+
+function renderStaff(){
+  var cont = document.getElementById('staff-list');
+  cont.innerHTML = '';
+  USERS.filter(function(u){return u.role!=='admin';}).forEach(function(u, i){
+    var realIdx = USERS.indexOf(u);
+    var card = document.createElement('div');
+    card.className = 'wcard';
+    card.style.cursor = 'pointer';
+    card.innerHTML = '<div class="wc-head" style="cursor:pointer">'
+      +'<div class="wc-av" style="'+u.avS+'">'+u.init+'</div>'
+      +'<div class="wc-info"><div class="wc-nm">'+u.name+'</div><div class="wc-role">'+ROLE[u.role]+'</div></div>'
+      +'<div class="wc-right"><div style="font-size:13px;color:var(--ter)">PIN: '+u.pin+'</div></div>'
+      +'<div style="font-size:13px;color:var(--blue);margin-left:8px;font-weight:500">✎</div>'
+      +'</div>';
+    card.onclick = function(){ openEdit(realIdx); };
+    cont.appendChild(card);
+  });
+}
+
+function openEdit(idx){
+  editIdx = idx;
+  var u = USERS[idx];
+  sv('edit-title', 'Редактировать: '+u.name);
+  sv('edit-sub', 'Роль: '+ROLE[u.role]);
+  document.getElementById('edit-nm').value = u.name;
+  document.getElementById('edit-pin').value = u.pin;
+  // Роли
+  var roles = ['cnc','carp','sand','paint','pack'];
+  var roleNames = {cnc:'ЧПУ-оператор',carp:'Столяр',sand:'Шлифовщик',paint:'Маляр',pack:'Упаковщик'};
+  var rc = document.getElementById('edit-roles');
+  rc.innerHTML = '';
+  roles.forEach(function(r){
+    var btn = document.createElement('div');
+    btn.style.cssText = 'padding:10px;border-radius:10px;border:1.5px solid '+(u.role===r?'var(--blue)':'var(--border)')+';background:'+(u.role===r?'var(--blue-l)':'var(--bg)')+';text-align:center;cursor:pointer;font-size:12px;font-weight:'+(u.role===r?'600':'400')+';color:'+(u.role===r?'var(--blue)':'var(--sub)');
+    btn.textContent = roleNames[r];
+    btn.onclick = function(){
+      USERS[editIdx].role = r;
+      openEdit(editIdx);
+    };
+    rc.appendChild(btn);
+  });
+  openOv('ov-edit');
+}
+
+function editSave(){
+  var nm = document.getElementById('edit-nm').value.trim();
+  var pin = document.getElementById('edit-pin').value.trim();
+  if(!nm){ document.getElementById('edit-nm').style.borderColor='#E24B4A'; return; }
+  if(pin.length !== 4 || isNaN(pin)){ document.getElementById('edit-pin').style.borderColor='#E24B4A'; return; }
+  USERS[editIdx].name = nm;
+  USERS[editIdx].pin = pin;
+  USERS[editIdx].init = nm.slice(0,2).toUpperCase();
+  // Сохранить в Firebase
+  db.ref('users/'+USERS[editIdx].id).set({name:nm, pin:pin, role:USERS[editIdx].role});
+  renderStaff();
+  renderUsers();
+  toast(nm+' — сохранено', false);
+  closeOv();
+}
 function renderUsers(){
   var ul=document.getElementById('user-list');ul.innerHTML='';
   USERS.forEach(function(u){var b=document.createElement('div');b.className='user-btn';b.id='ub-'+u.id;b.innerHTML='<div class="u-av" style="'+u.avS+'">'+u.init+'</div><div><div class="u-nm">'+u.name+'</div><div class="u-role">'+ROLE[u.role]+'</div><div class="u-pin">PIN: '+u.pin+'</div></div>';b.onclick=function(){selUser(u);};ul.appendChild(b);});
@@ -248,7 +365,7 @@ function pk(k){if(!selU){toast('Сначала выбери себя',true);retu
 function pb(){pinBuf=pinBuf.slice(0,-1);updDots();}
 function updDots(err){var ds=document.querySelectorAll('.pd');ds.forEach(function(d,i){d.className='pd'+(i<pinBuf.length?' f':'')+(err?' err':'');});}
 function chkPin(){if(pinBuf===selU.pin){CU=selU;pinBuf='';updDots();loginOk();}else{updDots(true);setTimeout(function(){pinBuf='';updDots();},700);}}
-function loginOk(){fbOff();if(CU.role==='admin'){startAdmin();goScreen('sc-admin');}else if(CU.role==='cnc'){startWorker('sc-cnc');}else if(CU.role==='carp'){startWorker('sc-carp');}else{startWorker('sc-work');}}
+function loginOk(){fbOff();if(CU.role==='admin'){startAdmin();goScreen('sc-admin');}else if(CU.role==='cnc'){startWorker('sc-cnc');}else if(CU.role==='carp'){startWorker('sc-carp');}else if(CU.role==='pack'){startPacker();goScreen('sc-pack');}else{startWorker('sc-work');}}
 function logout(){fbOff();CU=null;selU=null;pinBuf='';updDots();document.querySelectorAll('.user-btn').forEach(function(b){b.classList.remove('sel');});goScreen('sc-login');}
 function goScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');}
 function fbOff(){fbL.forEach(function(r){r.off();});fbL=[];}
@@ -270,15 +387,13 @@ function syncC(role,d){
 function renderTiles(gid,role){
   var g=document.getElementById(gid);g.innerHTML='';
   (localTasks[role]||[]).forEach(function(t,i){
-    var is3=(role==='carp'&&t.stages&&t.stages.length>0);
     var tile=document.createElement('div');tile.className='tile';
-    var badge=is3?'<div class="tile-badge badge-blue">3 этапа</div>':'<div class="tile-badge badge-green">'+(t.yld||1)+' шт</div>';
-    tile.innerHTML='<span class="tile-ico">'+t.ico+'</span><div class="tile-nm">'+t.nm+'</div><div class="tile-yl">'+t.rate+' ₽/шт</div>'+badge;
-    tile.onclick=(function(task,is3s){return function(){is3s?open3s(task):openOp(task);};})(t,is3);
+    tile.innerHTML='<span class="tile-ico">'+t.ico+'</span><div class="tile-nm">'+t.nm+'</div><div class="tile-yl">'+t.rate+' ₽/шт</div>';
+    tile.onclick=(function(task){return function(){openOp(task);};})(t);
     g.appendChild(tile);
   });
   var at=document.createElement('div');at.className='tile tile-add';
-  var lbl=role==='carp'?'Новая задача':(role==='cnc'?'Новый стол':'Новый этап');
+  var lbl=role==='cnc'?'Новый стол':(role==='carp'?'Новая задача':'Новый этап');
   at.innerHTML='<div class="add-circle">+</div><div class="tile-nm" style="color:var(--sub)">'+lbl+'</div>';
   at.onclick=function(){openAdd(role);};
   g.appendChild(at);
@@ -290,16 +405,26 @@ function opSave(){
   var e=opCtx.q*opCtx.rate;var dk=tdk();var now=new Date();var ts=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
   db.ref('ops/'+dk+'/'+opCtx.uid+'/entries').push({nm:opCtx.nm,ico:opCtx.ico,stage:opCtx.stage,pcs:opCtx.q,earn:e,brak:opCtx.b,time:ts});
   db.ref('ops/'+dk+'/'+opCtx.uid+'/summary').transaction(function(c){c=c||{p:0,e:0,b:0};c.p+=opCtx.q;c.e+=e;c.b+=opCtx.b;return c;});
+  if(opCtx.uid==='dima'){db.ref('stock/'+opCtx.nm).transaction(function(c){c=c||{total:0,lastDate:''};c.total+=opCtx.q;c.lastDate=dk;return c;});db.ref('ops/'+dk+'/dima/stock').transaction(function(c){return (c||0)+opCtx.q;});}
   toast(opCtx.nm+' · '+opCtx.q+' шт · '+e+' ₽',false);closeOv();
 }
-function open3s(task){s3Qty=[task.yld||1,task.yld||1,task.yld||1];s3Rate=task.rate;s3Uid=CU.id;s3Nm=task.nm;s3Ico=task.ico;sv('s3-title',task.nm);var body=document.getElementById('s3-body');body.innerHTML='';task.stages.forEach(function(sn,i){var d=document.createElement('div');d.className='s3-pill';d.innerHTML='<div class="s3-num">этап '+(i+1)+'</div><div class="s3-nm">'+sn+'</div><div class="s3-row"><span class="s3-lbl">Количество</span><div class="stpr"><button class="stbtn sg" onclick="s3C('+i+',-1)">−</button><span class="sv" id="s3q'+i+'" style="color:var(--text)">'+s3Qty[i]+'</span><button class="stbtn sg" onclick="s3C('+i+',1)">+</button></div></div>';body.appendChild(d);});updS3E();openOv('ov-3s');}
-function s3C(i,d){s3Qty[i]=Math.max(1,s3Qty[i]+d);sv('s3q'+i,s3Qty[i]);updS3E();}
-function updS3E(){sv('s3-earn','Итого за 3 этапа: '+(s3Qty[0]+s3Qty[1]+s3Qty[2])*s3Rate+' ₽');}
-function s3Save(){var e=(s3Qty[0]+s3Qty[1]+s3Qty[2])*s3Rate;var dk=tdk();var now=new Date();var ts=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();db.ref('ops/'+dk+'/'+s3Uid+'/entries').push({nm:s3Nm,ico:s3Ico,stage:'Столяр (3 этапа)',pcs:s3Qty[0],earn:e,brak:0,time:ts});db.ref('ops/'+dk+'/'+s3Uid+'/summary').transaction(function(c){c=c||{p:0,e:0,b:0};c.p+=s3Qty[0];c.e+=e;return c;});toast(s3Nm+' · 3 этапа · '+e+' ₽',false);closeOv();}
+
 function openAdd(role){addForRole=role;addYldV=4;addIcoIdx=0;document.getElementById('add-nm').value='';document.getElementById('add-rate').value='';sv('add-yld-v',4);sv('add-title',role==='carp'?'Новая задача':(role==='cnc'?'Новый стол':'Новый этап'));document.querySelectorAll('.ico-opt').forEach(function(o,i){o.className='ico-opt'+(i===0?' sel':'');});openOv('ov-add');}
 function aYld(d){addYldV=Math.max(1,addYldV+d);sv('add-yld-v',addYldV);}
 function aIco(i){addIcoIdx=i;document.querySelectorAll('.ico-opt').forEach(function(o,j){o.className='ico-opt'+(j===i?' sel':'');});}
-function addSave(){var nm=document.getElementById('add-nm').value.trim();var rate=parseInt(document.getElementById('add-rate').value)||0;if(!nm){document.getElementById('add-nm').style.borderColor='#E24B4A';return;}var t={nm:nm,rate:rate,yld:addYldV,ico:ICOS[addIcoIdx],stages:addForRole==='carp'?['Склейка царг','Торцевание царг','Приклейка резинок']:[]};if(!localTasks[addForRole])localTasks[addForRole]=[];localTasks[addForRole].push(t);db.ref('tasks/'+addForRole).push(t);if(addForRole==='cnc')renderTiles('cnc-tiles','cnc');else if(addForRole==='carp')renderTiles('carp-tiles','carp');else renderTiles('work-tiles',addForRole);toast('Добавлено: '+nm,false);closeOv();}
+function addSave(){var nm=document.getElementById('add-nm').value.trim();var rate=parseInt(document.getElementById('add-rate').value)||0;if(!nm){document.getElementById('add-nm').style.borderColor='#E24B4A';return;}var t={nm:nm,rate:rate,yld:addYldV,ico:ICOS[addIcoIdx]};if(!localTasks[addForRole])localTasks[addForRole]=[];localTasks[addForRole].push(t);db.ref('tasks/'+addForRole).push(t);if(addForRole==='cnc')renderTiles('cnc-tiles','cnc');else if(addForRole==='carp')renderTiles('carp-tiles','carp');else renderTiles('work-tiles',addForRole);toast('Добавлено: '+nm,false);closeOv();}
+
+function startPacker(){
+  sv('pack-name','Привет, '+CU.name);
+  sty('pack-av',CU.avS);sv('pack-av',CU.init);
+  renderTiles('pack-tiles','pack');
+  var ref=db.ref('ops/'+tdk()+'/dima/summary');
+  ref.on('value',function(s){var d=s.val()||{p:0,e:0,b:0};sv('pack-d',d.p||0);sv('pack-e',fmt(d.e||0));});
+  fbL.push(ref);
+  var ref2=db.ref('ops/'+tdk()+'/dima/stock');
+  ref2.on('value',function(s){sv('pack-s',s.val()||0);});
+  fbL.push(ref2);
+}
 function startAdmin(){admDayI=0;admDates=[];for(var i=0;i<30;i++){var d=new Date();d.setDate(d.getDate()-i);admDates.push(d.toISOString().slice(0,10));}renderAdmDay();}
 function admDay(d){admDayI=Math.max(0,Math.min(admDates.length-1,admDayI+d));renderAdmDay();}
 function renderAdmDay(){
@@ -314,7 +439,7 @@ function renderAdmDay(){
     var al=document.getElementById('adm-alerts');al.innerHTML='';
     if(tb>3){var a=document.createElement('div');a.className='alert';a.innerHTML='<div class="alert-t">⚠️ Много брака — '+tb+' шт</div>';al.appendChild(a);}
     var cont=document.getElementById('adm-workers');cont.innerHTML='';
-    var clrs=['#378ADD','#1D9E75','#EF9F27','#D85A30'];
+    var clrs=['#378ADD','#1D9E75','#EF9F27','#D85A30','#7F77DD'];
     workers.forEach(function(u,i){
       var sum=(opsData[u.id]&&opsData[u.id].summary)||{p:0,e:0,b:0};
       var entries=opsData[u.id]&&opsData[u.id].entries?Object.values(opsData[u.id].entries):[];
@@ -332,7 +457,9 @@ function renderAdmDay(){
           opsHtml+='<div class="op-row"><div class="op-ico">'+op.ico+'</div><div class="op-info"><div class="op-nm">'+op.nm+'</div><div class="op-stage">'+op.stage+'</div></div><div class="op-right"><div class="op-pcs">'+op.pcs+' шт</div><div class="op-earn">'+fmt(op.earn)+'</div>'+(op.brak>0?'<div class="op-brak">брак: '+op.brak+'</div>':'')+'<div class="op-time">'+op.time+'</div></div></div>';
         });
       }
-      opsHtml+='</div><div class="pay-box"><div><div class="pay-lbl">Заплатить '+u.name+'</div><div class="pay-sub">за '+lbl.toLowerCase()+'</div></div><div class="pay-val">'+fmt(sum.e||0)+'</div></div>';
+      opsHtml+='</div>';
+      if(u.id==='dima'){var stockVal=(opsData[u.id]&&opsData[u.id].stock)||0;opsHtml+='<div style="margin:6px 14px 2px;background:#EEEDFE;border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:12px;font-weight:600;color:#534AB7">Отправлено на склад</div><div style="font-size:10px;color:#7F77DD;margin-top:2px">за '+lbl.toLowerCase()+'</div></div><div style="font-size:18px;font-weight:700;color:#534AB7">'+stockVal+' шт</div></div>';}
+      opsHtml+='<div class="pay-box"><div><div class="pay-lbl">Заплатить '+u.name+'</div><div class="pay-sub">за '+lbl.toLowerCase()+'</div></div><div class="pay-val">'+fmt(sum.e||0)+'</div></div>';
       det.innerHTML=opsHtml;
       head.onclick=function(){isOpen=!isOpen;det.style.display=isOpen?'block':'none';head.classList.toggle('exp',isOpen);document.getElementById('aa'+i).className='wc-arr'+(isOpen?' open':'');};
       card.appendChild(head);card.appendChild(pw);card.appendChild(det);cont.appendChild(card);
