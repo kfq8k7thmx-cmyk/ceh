@@ -436,7 +436,7 @@ function editSave(){
 }
 function renderUsers(){ /* список скрыт — вход только по PIN */ }
 function selUser(u){selU=u;pinBuf='';updDots();document.querySelectorAll('.user-btn').forEach(function(b){b.classList.remove('sel');});document.getElementById('ub-'+u.id).classList.add('sel');}
-function pk(k){if(!selU){toast('Сначала выбери себя',true);return;}if(pinBuf.length>=4)return;pinBuf+=k;updDots();if(pinBuf.length===4)setTimeout(chkPin,120);}
+
 function pb(){pinBuf=pinBuf.slice(0,-1);updDots();}
 function updDots(err){var ds=document.querySelectorAll('.pd');ds.forEach(function(d,i){d.className='pd'+(i<pinBuf.length?' f':'')+(err?' err':'');});}
 function chkPin(){if(pinBuf===selU.pin){CU=selU;pinBuf='';updDots();loginOk();}else{updDots(true);setTimeout(function(){pinBuf='';updDots();},700);}}
