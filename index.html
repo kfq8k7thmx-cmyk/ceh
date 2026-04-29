@@ -214,7 +214,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
     <div class="spacer"></div>
   </div>
 </div>
-<div class="screen" id="sc-mdf"><div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-admin')">&#8249;</div><div style="flex:1"><div class="tb-title">Склад МДФ</div><div class="tb-sub">остаток листов по видам</div></div></div><div class="scroll"><div class="slbl">Остаток на складе</div><div id="mdf-summary" style="padding:0 16px 8px"></div><button onclick="openMdfAdd()" style="margin:0 16px 12px;width:calc(100% - 32px);padding:13px;background:var(--amber-l);color:var(--amber);border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">+ Добавить листы МДФ</button><div class="slbl">История расхода</div><div id="mdf-history" style="padding:0 16px"></div><div class="spacer"></div></div></div><div class="screen" id="sc-stock"><div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-admin')">&#8249;</div><div style="flex:1"><div class="tb-title">Склад</div><div class="tb-sub">что упаковано и когда</div></div></div><div class="scroll"><div class="slbl">Итого по изделиям</div><div id="stock-summary" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 8px"></div><div class="slbl">История по дням</div><div id="stock-list"></div><div class="spacer"></div></div></div><div class="screen" id="sc-taskmgr"><div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-staff')">&#8249;</div><div style="flex:1"><div class="tb-title">Управление задачами</div><div class="tb-sub">добавляй, редактируй, удаляй</div></div></div><div class="scroll"><div style="display:flex;gap:8px;padding:10px 16px 4px;overflow-x:auto;flex-shrink:0" id="role-tabs"></div><div id="task-mgr-tiles" style="padding:8px 16px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px"></div><div class="spacer"></div></div></div><div class="screen" id="sc-wb"><div class="topbar"><div><div class="tb-title" id="wb-name">Перепаковщик</div><div class="tb-sub">Возвраты Wildberries</div></div><div class="tb-av" id="wb-av" onclick="logout()" style="background:#F0EBF8;color:#6B21A8"></div></div><div class="mets" style="grid-template-columns:1fr 1fr 1fr"><div class="met" style="background:#F0EBF8"><div class="mv" id="wb-cnt" style="color:#6B21A8">0</div><div class="ml" style="color:#9333EA">принято</div></div><div class="met mg"><div class="mv" id="wb-good">0</div><div class="ml">на склад</div></div><div class="met mr"><div class="mv" id="wb-bad">0</div><div class="ml">брак</div></div></div><div class="slbl">Что делаем с возвратом?</div><div class="scroll" style="padding:0 16px"><div onclick="openWbGood()" style="background:var(--green-l);border-radius:var(--r);padding:20px 16px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:14px;border:1.5px solid var(--green-v)"><div style="width:48px;height:48px;border-radius:50%;background:var(--green-v);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">✓</div><div><div style="font-size:15px;font-weight:600;color:var(--green)">Годный товар</div><div style="font-size:12px;color:var(--green-v);margin-top:3px">Перепаковать → отправить на склад</div></div></div><div onclick="openWbBad()" style="background:var(--red-l);border-radius:var(--r);padding:20px 16px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:14px;border:1.5px solid #F09595"><div style="width:48px;height:48px;border-radius:50%;background:var(--red-v);display:flex;align-items:center;justify-content:center;font-size:22px;color:white;flex-shrink:0">✕</div><div><div style="font-size:15px;font-weight:600;color:var(--red)">Брак / повреждён</div><div style="font-size:12px;color:var(--red-v);margin-top:3px">Зафиксировать и списать</div></div></div><div style="font-size:10px;font-weight:600;color:var(--ter);letter-spacing:.08em;text-transform:uppercase;padding:8px 0 6px">История за сегодня</div><div id="wb-history"></div><div style="height:20px"></div></div></div><div class="overlay" id="ov-op" onclick="ovBg(event,'ov-op')">
+<div class="screen" id="sc-mdf"><div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-admin')">&#8249;</div><div style="flex:1"><div class="tb-title">Склад МДФ</div><div class="tb-sub">остаток листов по видам</div></div></div><div class="scroll"><div class="slbl">Остаток на складе</div><div id="mdf-summary" style="padding:0 16px 8px"></div><button onclick="openMdfAdd()" style="margin:0 16px 12px;width:calc(100% - 32px);padding:13px;background:var(--amber-l);color:var(--amber);border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">+ Добавить листы МДФ</button><div class="slbl">История расхода</div><div id="mdf-history" style="padding:0 16px"></div><div class="spacer"></div></div></div><div class="screen" id="sc-stock"><div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-admin')">&#8249;</div><div style="flex:1"><div class="tb-title">Склад</div><div class="tb-sub">что упаковано и когда</div></div></div><div class="scroll"><div class="slbl">Итого по изделиям</div><div id="stock-summary" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 8px"></div><div class="slbl">История по дням</div><div id="stock-list"></div><div class="spacer"></div></div></div><div class="screen" id="sc-taskmgr"><div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-staff')">&#8249;</div><div style="flex:1"><div class="tb-title">Управление задачами</div><div class="tb-sub">добавляй, редактируй, удаляй</div></div></div><div class="scroll"><div style="display:flex;gap:8px;padding:10px 16px 4px;overflow-x:auto;flex-shrink:0" id="role-tabs"></div><div id="task-mgr-tiles" style="padding:8px 16px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px"></div><div class="spacer"></div></div></div><div class="screen" id="sc-wb"><div class="topbar"><div><div class="tb-title" id="wb-name">Перепаковщик</div><div class="tb-sub">Перепаковка WB</div></div><div class="tb-av" id="wb-av" onclick="logout()" style="background:#F0EBF8;color:#6B21A8"></div></div><div class="mets" style="grid-template-columns:1fr 1fr"><div class="met mb"><div class="mv" id="wb-d">0</div><div class="ml">упаковал</div></div><div class="met mg"><div class="mv" id="wb-e">0 ₽</div><div class="ml">заработал</div></div></div><div class="slbl">Выбери изделие</div><div class="scroll"><div class="tiles" id="wb-tiles"></div><button onclick="openOv('ov-wbbad')" style="margin:0 16px 16px;width:calc(100% - 32px);padding:14px;background:#FCEBEB;color:#A32D2D;border:1.5px solid #F09595;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">&#9888; Отметить брак</button></div></div>
+<div class="overlay" id="ov-op" onclick="ovBg(event,'ov-op')">
   <div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" id="op-title">Задача</div><div class="sh-sub" id="op-sub">50 ₽/шт</div></div>
   <div class="row-lbl">Готовые изделия</div>
   <div class="pill-row pill-g"><div class="pill-nm pill-nm-g">Сделал</div><div class="stpr"><button class="stbtn sg" onclick="opC('q',-1)">−</button><span class="sv sv-g" id="op-q">1</span><button class="stbtn sg" onclick="opC('q',1)">+</button></div></div>
@@ -525,7 +526,7 @@ function opSave(){
   db.ref('ops/'+dk+'/'+opCtx.uid+'/entries').push({nm:opCtx.nm,ico:opCtx.ico,stage:opCtx.stage,pcs:opCtx.q,earn:e,brak:opCtx.b,time:ts});
   if(CU.role==='cnc') deductMdf(opCtx.nm, opCtx.rate && localTasks.cnc ? (function(){var t=localTasks.cnc.find(function(x){return x.nm===opCtx.nm;});return t?t.yld:0;})() : 0, opCtx.q);
   db.ref('ops/'+dk+'/'+opCtx.uid+'/summary').transaction(function(c){c=c||{p:0,e:0,b:0};c.p+=opCtx.q;c.e+=e;c.b+=opCtx.b;return c;});
-  if(opCtx.uid==='dima'){db.ref('stock/'+opCtx.nm).transaction(function(c){c=c||{total:0,lastDate:''};c.total+=opCtx.q;c.lastDate=dk;return c;});db.ref('ops/'+dk+'/dima/stock').transaction(function(c){return (c||0)+opCtx.q;});}
+  if(opCtx.uid==='dima'||CU.role==='wb'){db.ref('stock/'+opCtx.nm).transaction(function(c){c=c||{total:0,lastDate:''};c.total+=opCtx.q;c.lastDate=dk;return c;});db.ref('ops/'+dk+'/dima/stock').transaction(function(c){return (c||0)+opCtx.q;});}
   toast(opCtx.nm+' · '+opCtx.q+' шт · '+e+' ₽',false);closeOv();
 }
 
@@ -1155,24 +1156,45 @@ var wbgQty=1, wbbQty=1;
 function startWb(){
   sv('wb-name','Ассалам алайкум, '+CU.name);
   sv('wb-av',CU.init);
-  loadWbHistory();
-  // Слушать счётчики за сегодня
-  db.ref('wb_returns/'+tdk()).on('value',function(snap){
-    var data=snap.val()||{};
-    var keys=Object.keys(data);
-    var good=0,bad=0;
-    keys.forEach(function(k){
-      var r=data[k];
-      if(r.worker===CU.id){
-        if(r.state==='good') good+=r.qty||0;
-        else bad+=r.qty||0;
-      }
-    });
-    sv('wb-cnt',good+bad);
-    sv('wb-good',good);
-    sv('wb-bad',bad);
+  // Загружаем задачи упаковщика (pack) для WB перепаковщика
+  renderWbTiles();
+  // Слушать сводку за сегодня
+  var ref=db.ref('ops/'+tdk()+'/'+CU.id+'/summary');
+  ref.on('value',function(s){
+    var d=s.val()||{p:0,e:0,b:0};
+    sv('wb-d',d.p||0);
+    sv('wb-e',fmt(d.e||0));
   });
+  fbL.push(ref);
   goScreen('sc-wb');
+}
+
+function renderWbTiles(){
+  var g=document.getElementById('wb-tiles'); if(!g) return;
+  g.innerHTML='';
+  // Используем задачи упаковщика (pack) — те же изделия
+  var list=localTasks['pack']||[];
+  list.forEach(function(t){
+    var tile=document.createElement('div'); tile.className='tile';
+    tile.innerHTML='<span class="tile-ico">'+t.ico+'</span><div class="tile-nm">'+t.nm+'</div><div class="tile-yl">'+t.rate+' ₽/шт</div>';
+    tile.onclick=(function(task){return function(){openWbOp(task);};})(t);
+    g.appendChild(tile);
+  });
+  // Кнопка добавить (только admin может)
+  if(CU&&CU.role==='admin'){
+    var at=document.createElement('div');at.className='tile tile-add';
+    at.innerHTML='<div class="add-circle">+</div><div class="tile-nm" style="color:var(--sub)">Новый этап</div>';
+    at.onclick=function(){openAdd('pack');}; g.appendChild(at);
+  }
+}
+
+function openWbOp(task){
+  // Используем стандартный openOp но с записью на склад
+  opCtx={q:task.yld||1,b:0,rate:task.rate,uid:CU.id,nm:task.nm,ico:task.ico,stage:'Перепаковка WB'};
+  sv('op-title',task.nm);
+  sv('op-sub','Перепаковка WB · '+task.rate+' ₽/шт');
+  updOpE();
+  openOv('ov-op');
 }
 
 function loadWbHistory(){
