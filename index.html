@@ -160,19 +160,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
 
   </div>
 </div>
-<div class="screen" id="sc-cnc">
-  <div class="topbar"><div><div class="tb-title" id="cnc-name">Алексей</div><div class="tb-sub">ЧПУ-оператор</div></div><div class="tb-av" id="cnc-av" onclick="logout()"></div></div>
-  <div class="mets"><div class="met mb" onclick="openMyLog()" style="cursor:pointer"><div class="mv" id="cnc-d">0</div><div class="ml">сделал ✎</div></div><div class="met mg"><div class="mv" id="cnc-e">0 ₽</div><div class="ml">заработал</div></div><div class="met mr"><div class="mv" id="cnc-b">0</div><div class="ml">брак</div></div></div>
-  <div class="slbl">Выбери стол</div><div class="scroll"><div class="tiles" id="cnc-tiles"></div></div>
-</div>
-<div class="screen" id="sc-carp">
-  <div class="topbar"><div><div class="tb-title" id="carp-name">Михаил</div><div class="tb-sub">Столяр</div></div><div class="tb-av" id="carp-av" onclick="logout()"></div></div>
-  <div class="mets" style="grid-template-columns:1fr 1fr"><div class="met mb" onclick="openMyLog()" style="cursor:pointer"><div class="mv" id="carp-d">0</div><div class="ml">сделал ✎</div></div><div class="met mg"><div class="mv" id="carp-e">0 ₽</div><div class="ml">заработал</div></div></div>
-  <div class="slbl">Задачи</div><div class="scroll"><div class="tiles" id="carp-tiles"></div></div>
-</div>
 <div class="screen" id="sc-work">
   <div class="topbar"><div><div class="tb-title" id="work-name">Сергей</div><div class="tb-sub" id="work-role">Шлифовщик</div></div><div class="tb-av" id="work-av" onclick="logout()"></div></div>
-  <div class="mets" style="grid-template-columns:1fr 1fr"><div class="met mb" onclick="openMyLog()" style="cursor:pointer"><div class="mv" id="work-d">0</div><div class="ml">сделал ✎</div></div><div class="met mg"><div class="mv" id="work-e">0 ₽</div><div class="ml">заработал</div></div></div>
+  <div class="mets" style="grid-template-columns:1fr 1fr"><div class="met mb" onclick="openMyLog()" style="cursor:pointer"><div class="mv" id="work-d">0</div><div class="ml">сделал ✎</div></div><div class="met mg"><div class="mv" id="work-e">0 ₽</div><div class="ml">заработал</div></div></div>  <button onclick="openMyHistory()" style="margin:6px 16px 0;width:calc(100% - 32px);padding:10px;background:var(--card);border:0.5px solid var(--border);border-radius:var(--rs);font-size:13px;font-weight:500;color:var(--blue);cursor:pointer;display:flex;align-items:center;justify-content:space-between"><span>&#128197; Моя история по дням</span><span style="color:var(--ter)">›</span></button>
   <div id="chain-info" style="display:none;margin:6px 16px 0;background:var(--blue-l);border-radius:var(--rs);padding:8px 12px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:12px;color:var(--blue);font-weight:500" id="chain-lbl">Готово к обработке</div><div style="font-size:18px;font-weight:700;color:var(--blue)" id="chain-cnt">—</div></div><div class="slbl">Этапы</div><div class="scroll"><div id="brak-alerts" style="display:none;margin:0 16px 8px"></div><div class="tiles" id="work-tiles"></div></div>
 </div>
 <div class="screen" id="sc-admin">
@@ -282,17 +272,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
     <button class="btn-cancel" onclick="closeOv()">Отмена</button>
   </div>
 </div>
-<div class="overlay" id="ov-etask" onclick="ovBg(event,'ov-etask')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" id="etask-heading">Редактировать задачу</div><div class="sh-sub" id="etask-sub">Измени данные или удали этап</div></div><div class="field"><div class="field-lbl">Название задачи</div><input id="et-nm" placeholder="Название" autocomplete="off"></div><div class="field"><div class="field-lbl">Ставка ₽ за 1 штуку</div><input id="et-rate" type="number" inputmode="numeric" placeholder="50" autocomplete="off"></div><div id="et-yld-field" style="display:none"><div class="field"><div class="field-lbl">Выход с листа (штук)</div><div class="stpr-yld"><button onclick="etYld(-1)">&#8722;</button><span id="et-yld">4</span><button onclick="etYld(1)">+</button></div></div></div><div class="field"><div class="field-lbl">Иконка</div><div class="ico-grid" id="et-icos"></div></div><button class="btn-primary" onclick="etSave()">&#10003; Сохранить изменения</button><button class="btn-primary" style="background:#FCEBEB;color:#A32D2D" onclick="etDelete()">&#128465; Удалить этот этап</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-addtask" onclick="ovBg(event,'ov-addtask')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title">Новая задача</div><div class="sh-sub" id="addtask-sub">Заполни — появится на экране</div></div><div class="field"><div class="field-lbl">Название</div><input id="at-nm" placeholder="Название задачи" autocomplete="off"></div><div class="field"><div class="field-lbl">Ставка ₽ за 1 штуку</div><input id="at-rate" type="number" inputmode="numeric" placeholder="50" autocomplete="off"></div><div id="at-yld-field" style="display:none"><div class="field"><div class="field-lbl">Выход с листа (штук)</div><div class="stpr-yld"><button onclick="atYld(-1)">&#8722;</button><span id="at-yld">4</span><button onclick="atYld(1)">+</button></div></div></div><div class="field"><div class="field-lbl">Иконка</div><div class="ico-grid" id="at-icos"></div></div><button class="btn-primary btn-green" onclick="atSave()">Добавить задачу</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-brak" onclick="ovBg(event,'ov-brak')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" style="color:#A32D2D">&#9888; Отметить брак</div><div class="sh-sub">Укажи изделие и количество брака. Маляр получит оповещение.</div></div><div class="field"><div class="field-lbl">Изделие</div><input id="bk-nm" placeholder="Название изделия" autocomplete="off"></div><div class="field"><div class="field-lbl">Количество бракованных</div><div class="stpr-yld"><button onclick="bkChg(-1)">&#8722;</button><span id="bk-qty">1</span><button onclick="bkChg(1)">+</button></div></div><div class="field"><div class="field-lbl">Причина (необязательно)</div><input id="bk-reason" placeholder="Например: царапина, скол..." autocomplete="off"></div><button class="btn-primary" style="background:#A32D2D" onclick="bkSave()">Отправить в брак</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-newrole" onclick="ovBg(event,'ov-newrole')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title">Новая специальность</div><div class="sh-sub">Например: Маляр 2, Сборщик, Резчик...</div></div><div class="field"><div class="field-lbl">Название специальности</div><input id="nr-nm" placeholder="Например: Маляр 3" autocomplete="off"></div><div class="field"><div class="field-lbl">Иконка (эмодзи)</div><div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px" id="nr-icos"><div class="ico-opt sel" onclick="nrIco(0)">🎨</div><div class="ico-opt" onclick="nrIco(1)">🔨</div><div class="ico-opt" onclick="nrIco(2)">✂️</div><div class="ico-opt" onclick="nrIco(3)">📦</div><div class="ico-opt" onclick="nrIco(4)">🪛</div><div class="ico-opt" onclick="nrIco(5)">🧱</div><div class="ico-opt" onclick="nrIco(6)">🪚</div><div class="ico-opt" onclick="nrIco(7)">🔧</div><div class="ico-opt" onclick="nrIco(8)">🧹</div><div class="ico-opt" onclick="nrIco(9)">⚙️</div><div class="ico-opt" onclick="nrIco(10)">🖌️</div><div class="ico-opt" onclick="nrIco(11)">🪤</div></div></div><div style="background:var(--bg);border-radius:var(--rs);padding:12px 14px;margin-bottom:14px"><div style="font-size:11px;color:var(--sub);margin-bottom:4px">После создания:</div><div style="font-size:12px;color:var(--text)">&#10003; Появится в списке при добавлении сотрудника</div><div style="font-size:12px;color:var(--text);margin-top:3px">&#10003; Появится вкладкой в управлении задачами</div><div style="font-size:12px;color:var(--text);margin-top:3px">&#10003; Ты сам добавишь задачи для этой специальности</div></div><button class="btn-primary" style="background:var(--amber)" onclick="saveNewRole()">Создать специальность</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-mylog" onclick="ovBg(event,'ov-mylog')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title">Мои операции сегодня</div><div class="sh-sub">Нажми на запись чтобы исправить</div></div><div id="mylog-list" style="margin-bottom:14px"></div><button class="btn-cancel" onclick="closeOv()">Закрыть</button></div></div><div class="overlay" id="ov-fixop" onclick="ovBg(event,'ov-fixop')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" id="fixop-title">Исправить запись</div><div class="sh-sub" id="fixop-sub">Измени количество</div></div><div style="background:var(--bg);border-radius:var(--rs);padding:14px;margin-bottom:14px;text-align:center"><div style="font-size:13px;color:var(--sub);margin-bottom:10px">Было записано</div><div style="font-size:32px;font-weight:700;color:var(--text)" id="fixop-old">0 шт</div></div><div class="row-lbl">Исправить на</div><div class="pill-row pill-g" style="margin-bottom:14px"><div class="pill-nm pill-nm-g">Новое количество</div><div class="stpr"><button class="stbtn sg" onclick="fixC(-1)">−</button><span class="sv sv-g" id="fixop-q">1</span><button class="stbtn sg" onclick="fixC(1)">+</button></div></div><div style="font-size:13px;color:var(--sub);text-align:center;margin-bottom:14px" id="fixop-earn"></div><button class="btn-primary" onclick="fixSave()">Сохранить исправление</button><button class="btn-primary" style="background:#FCEBEB;color:#A32D2D" onclick="fixDelete()">Удалить эту запись</button><button class="btn-cancel" onclick="backToLog()">Назад</button></div></div><div class="overlay" id="ov-mdfadd" onclick="ovBg(event,'ov-mdfadd')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title">Приход МДФ</div><div class="sh-sub">Укажи тип листа и количество</div></div><div class="field"><div class="field-lbl">Тип / толщина листа</div><input id="mdf-type" placeholder="Например: МДФ 16мм или просто МДФ" autocomplete="off"></div><div class="field"><div class="field-lbl">Количество листов</div><div class="stpr-yld"><button onclick="mdfChg(-1)">&#8722;</button><span id="mdf-qty" style="font-size:28px;font-weight:700;color:var(--text)">10</span><button onclick="mdfChg(1)">+</button></div></div><button class="btn-primary" style="background:var(--amber);color:white" onclick="mdfSave()">Добавить на склад</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-wb" onclick="ovBg(event,'ov-wb')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" style="color:#534AB7">&#128230; Возврат с Wildberries</div><div class="sh-sub">Проверь товар и укажи состояние</div></div><div class="field"><div class="field-lbl">Название изделия</div><input id="wb-nm" placeholder="Например: Стол Греция" autocomplete="off"></div><div class="field"><div class="field-lbl">Количество штук</div><div class="stpr-yld"><button onclick="wbChg(-1)">&#8722;</button><span id="wb-qty">1</span><button onclick="wbChg(1)">+</button></div></div><div class="field"><div class="field-lbl">Состояние товара</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px"><div id="wb-good-btn" onclick="wbSetState('good')" style="padding:12px 8px;border-radius:10px;border:1.5px solid var(--green);background:var(--green-l);text-align:center;cursor:pointer"><div style="font-size:20px">&#10003;</div><div style="font-size:12px;font-weight:600;color:var(--green);margin-top:4px">Годный</div><div style="font-size:10px;color:var(--green-v);margin-top:2px">перепаковать &#8594; склад</div></div><div id="wb-bad-btn" onclick="wbSetState('bad')" style="padding:12px 8px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);text-align:center;cursor:pointer"><div style="font-size:20px">&#10007;</div><div style="font-size:12px;font-weight:600;color:var(--sub);margin-top:4px">Брак</div><div style="font-size:10px;color:var(--ter);margin-top:2px">списать</div></div></div></div><button class="btn-primary" style="background:#534AB7" onclick="wbSave()">Записать возврат</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-wbgood" onclick="ovBg(event,'ov-wbgood')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" style="color:var(--green)">✓ Годный возврат</div><div class="sh-sub">Товар перепакован и идёт на склад</div></div><div class="field"><div class="field-lbl">Название изделия</div><input id="wbg-nm" placeholder="Например: Стол Греция" autocomplete="off"></div><div class="field"><div class="field-lbl">Количество штук</div><div class="stpr-yld"><button onclick="wbgChg(-1)">&#8722;</button><span id="wbg-qty">1</span><button onclick="wbgChg(1)">+</button></div></div><div class="field"><div class="field-lbl">Ставка за перепаковку (₽/шт)</div><input id="wbg-rate" type="number" inputmode="numeric" placeholder="30" autocomplete="off"></div><button class="btn-primary" style="background:var(--green)" onclick="wbgSave()">Отправить на склад</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-wbbad" onclick="ovBg(event,'ov-wbbad')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" style="color:var(--red)">✕ Брак / повреждён</div><div class="sh-sub">Товар списывается</div></div><div class="field"><div class="field-lbl">Название изделия</div><input id="wbb-nm" placeholder="Например: Стол Греция" autocomplete="off"></div><div class="field"><div class="field-lbl">Количество штук</div><div class="stpr-yld"><button onclick="wbbChg(-1)">&#8722;</button><span id="wbb-qty">1</span><button onclick="wbbChg(1)">+</button></div></div><div class="field"><div class="field-lbl">Причина (необязательно)</div><input id="wbb-reason" placeholder="Трещина, скол, загрязнение..." autocomplete="off"></div><button class="btn-primary" style="background:var(--red)" onclick="wbbSave()">Списать брак</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-wb-good-list" onclick="ovBg(event,'ov-wb-good-list')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" style="color:var(--green)">✓ Годный — выбери изделие</div><div class="sh-sub">200 ₽ за каждую штуку → на склад</div></div><div class="tiles" id="wb-good-tiles" style="padding:0;margin-bottom:14px"></div><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-wb-bad-list" onclick="ovBg(event,'ov-wb-bad-list')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" style="color:var(--red)">✕ Брак — выбери изделие</div><div class="sh-sub">Будет списано, на склад не идёт</div></div><div class="tiles" id="wb-bad-tiles" style="padding:0;margin-bottom:14px"></div><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-wb-qty" onclick="ovBg(event,'ov-wb-qty')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" id="wb-qty-title">Греция</div><div class="sh-sub" id="wb-qty-sub">200 ₽/шт</div></div><div class="pill-row pill-g" style="margin-bottom:10px"><div class="pill-nm pill-nm-g">Количество</div><div class="stpr"><button class="stbtn sg" onclick="wbQtyChg(-1)">&#8722;</button><span class="sv sv-g" id="wb-qty-val">1</span><button class="stbtn sg" onclick="wbQtyChg(1)">+</button></div></div><div class="earn-txt" id="wb-qty-earn"></div><button class="btn-primary" id="wb-qty-save-btn" onclick="wbQtySave()">Записать</button><button class="btn-cancel" onclick="backToWbList()">Назад</button></div></div><div class="toast-wrap" id="tw" style="display:none"><div class="toast" id="t-el"><div class="toast-dot" id="t-dot"></div><div class="toast-txt" id="t-txt"></div></div></div>
+<div class="overlay" id="ov-etask" onclick="ovBg(event,'ov-etask')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" id="etask-heading">Редактировать задачу</div><div class="sh-sub" id="etask-sub">Измени данные или удали этап</div></div><div class="field"><div class="field-lbl">Название задачи</div><input id="et-nm" placeholder="Название" autocomplete="off"></div><div class="field"><div class="field-lbl">Ставка ₽ за 1 штуку</div><input id="et-rate" type="number" inputmode="numeric" placeholder="50" autocomplete="off"></div><div id="et-yld-field" style="display:none"><div class="field"><div class="field-lbl">Выход с листа (штук)</div><div class="stpr-yld"><button onclick="etYld(-1)">&#8722;</button><span id="et-yld">4</span><button onclick="etYld(1)">+</button></div></div></div><div class="field"><div class="field-lbl">Иконка</div><div class="ico-grid" id="et-icos"></div></div><button class="btn-primary" onclick="etSave()">&#10003; Сохранить изменения</button><button class="btn-primary" style="background:#FCEBEB;color:#A32D2D" onclick="etDelete()">&#128465; Удалить этот этап</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-addtask" onclick="ovBg(event,'ov-addtask')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title">Новая задача</div><div class="sh-sub" id="addtask-sub">Заполни — появится на экране</div></div><div class="field"><div class="field-lbl">Название</div><input id="at-nm" placeholder="Название задачи" autocomplete="off"></div><div class="field"><div class="field-lbl">Ставка ₽ за 1 штуку</div><input id="at-rate" type="number" inputmode="numeric" placeholder="50" autocomplete="off"></div><div id="at-yld-field" style="display:none"><div class="field"><div class="field-lbl">Выход с листа (штук)</div><div class="stpr-yld"><button onclick="atYld(-1)">&#8722;</button><span id="at-yld">4</span><button onclick="atYld(1)">+</button></div></div></div><div class="field"><div class="field-lbl">Иконка</div><div class="ico-grid" id="at-icos"></div></div><button class="btn-primary btn-green" onclick="atSave()">Добавить задачу</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-brak" onclick="ovBg(event,'ov-brak')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" style="color:#A32D2D">&#9888; Отметить брак</div><div class="sh-sub">Укажи изделие и количество брака. Маляр получит оповещение.</div></div><div class="field"><div class="field-lbl">Изделие</div><input id="bk-nm" placeholder="Название изделия" autocomplete="off"></div><div class="field"><div class="field-lbl">Количество бракованных</div><div class="stpr-yld"><button onclick="bkChg(-1)">&#8722;</button><span id="bk-qty">1</span><button onclick="bkChg(1)">+</button></div></div><div class="field"><div class="field-lbl">Причина (необязательно)</div><input id="bk-reason" placeholder="Например: царапина, скол..." autocomplete="off"></div><button class="btn-primary" style="background:#A32D2D" onclick="bkSave()">Отправить в брак</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-newrole" onclick="ovBg(event,'ov-newrole')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title">Новая специальность</div><div class="sh-sub">Например: Маляр 2, Сборщик, Резчик...</div></div><div class="field"><div class="field-lbl">Название специальности</div><input id="nr-nm" placeholder="Например: Маляр 3" autocomplete="off"></div><div class="field"><div class="field-lbl">Иконка (эмодзи)</div><div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px" id="nr-icos"><div class="ico-opt sel" onclick="nrIco(0)">🎨</div><div class="ico-opt" onclick="nrIco(1)">🔨</div><div class="ico-opt" onclick="nrIco(2)">✂️</div><div class="ico-opt" onclick="nrIco(3)">📦</div><div class="ico-opt" onclick="nrIco(4)">🪛</div><div class="ico-opt" onclick="nrIco(5)">🧱</div><div class="ico-opt" onclick="nrIco(6)">🪚</div><div class="ico-opt" onclick="nrIco(7)">🔧</div><div class="ico-opt" onclick="nrIco(8)">🧹</div><div class="ico-opt" onclick="nrIco(9)">⚙️</div><div class="ico-opt" onclick="nrIco(10)">🖌️</div><div class="ico-opt" onclick="nrIco(11)">🪤</div></div></div><div style="background:var(--bg);border-radius:var(--rs);padding:12px 14px;margin-bottom:14px"><div style="font-size:11px;color:var(--sub);margin-bottom:4px">После создания:</div><div style="font-size:12px;color:var(--text)">&#10003; Появится в списке при добавлении сотрудника</div><div style="font-size:12px;color:var(--text);margin-top:3px">&#10003; Появится вкладкой в управлении задачами</div><div style="font-size:12px;color:var(--text);margin-top:3px">&#10003; Ты сам добавишь задачи для этой специальности</div></div><button class="btn-primary" style="background:var(--amber)" onclick="saveNewRole()">Создать специальность</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-mylog" onclick="ovBg(event,'ov-mylog')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title">Мои операции сегодня</div><div class="sh-sub">Нажми на запись чтобы исправить</div></div><div id="mylog-list" style="margin-bottom:14px"></div><button class="btn-cancel" onclick="closeOv()">Закрыть</button></div></div><div class="overlay" id="ov-fixop" onclick="ovBg(event,'ov-fixop')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" id="fixop-title">Исправить запись</div><div class="sh-sub" id="fixop-sub">Измени количество</div></div><div style="background:var(--bg);border-radius:var(--rs);padding:14px;margin-bottom:14px;text-align:center"><div style="font-size:13px;color:var(--sub);margin-bottom:10px">Было записано</div><div style="font-size:32px;font-weight:700;color:var(--text)" id="fixop-old">0 шт</div></div><div class="row-lbl">Исправить на</div><div class="pill-row pill-g" style="margin-bottom:14px"><div class="pill-nm pill-nm-g">Новое количество</div><div class="stpr"><button class="stbtn sg" onclick="fixC(-1)">−</button><span class="sv sv-g" id="fixop-q">1</span><button class="stbtn sg" onclick="fixC(1)">+</button></div></div><div style="font-size:13px;color:var(--sub);text-align:center;margin-bottom:14px" id="fixop-earn"></div><button class="btn-primary" onclick="fixSave()">Сохранить исправление</button><button class="btn-primary" style="background:#FCEBEB;color:#A32D2D" onclick="fixDelete()">Удалить эту запись</button><button class="btn-cancel" onclick="backToLog()">Назад</button></div></div><div class="overlay" id="ov-mdfadd" onclick="ovBg(event,'ov-mdfadd')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title">Приход МДФ</div><div class="sh-sub">Укажи тип листа и количество</div></div><div class="field"><div class="field-lbl">Тип / толщина листа</div><input id="mdf-type" placeholder="Например: МДФ 16мм или просто МДФ" autocomplete="off"></div><div class="field"><div class="field-lbl">Количество листов</div><div class="stpr-yld"><button onclick="mdfChg(-1)">&#8722;</button><span id="mdf-qty" style="font-size:28px;font-weight:700;color:var(--text)">10</span><button onclick="mdfChg(1)">+</button></div></div><button class="btn-primary" style="background:var(--amber);color:white" onclick="mdfSave()">Добавить на склад</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-wb" onclick="ovBg(event,'ov-wb')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" style="color:#534AB7">&#128230; Возврат с Wildberries</div><div class="sh-sub">Проверь товар и укажи состояние</div></div><div class="field"><div class="field-lbl">Название изделия</div><input id="wb-nm" placeholder="Например: Стол Греция" autocomplete="off"></div><div class="field"><div class="field-lbl">Количество штук</div><div class="stpr-yld"><button onclick="wbChg(-1)">&#8722;</button><span id="wb-qty">1</span><button onclick="wbChg(1)">+</button></div></div><div class="field"><div class="field-lbl">Состояние товара</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px"><div id="wb-good-btn" onclick="wbSetState('good')" style="padding:12px 8px;border-radius:10px;border:1.5px solid var(--green);background:var(--green-l);text-align:center;cursor:pointer"><div style="font-size:20px">&#10003;</div><div style="font-size:12px;font-weight:600;color:var(--green);margin-top:4px">Годный</div><div style="font-size:10px;color:var(--green-v);margin-top:2px">перепаковать &#8594; склад</div></div><div id="wb-bad-btn" onclick="wbSetState('bad')" style="padding:12px 8px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);text-align:center;cursor:pointer"><div style="font-size:20px">&#10007;</div><div style="font-size:12px;font-weight:600;color:var(--sub);margin-top:4px">Брак</div><div style="font-size:10px;color:var(--ter);margin-top:2px">списать</div></div></div></div><button class="btn-primary" style="background:#534AB7" onclick="wbSave()">Записать возврат</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-wbgood" onclick="ovBg(event,'ov-wbgood')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" style="color:var(--green)">✓ Годный возврат</div><div class="sh-sub">Товар перепакован и идёт на склад</div></div><div class="field"><div class="field-lbl">Название изделия</div><input id="wbg-nm" placeholder="Например: Стол Греция" autocomplete="off"></div><div class="field"><div class="field-lbl">Количество штук</div><div class="stpr-yld"><button onclick="wbgChg(-1)">&#8722;</button><span id="wbg-qty">1</span><button onclick="wbgChg(1)">+</button></div></div><div class="field"><div class="field-lbl">Ставка за перепаковку (₽/шт)</div><input id="wbg-rate" type="number" inputmode="numeric" placeholder="30" autocomplete="off"></div><button class="btn-primary" style="background:var(--green)" onclick="wbgSave()">Отправить на склад</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-wbbad" onclick="ovBg(event,'ov-wbbad')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" style="color:var(--red)">✕ Брак / повреждён</div><div class="sh-sub">Товар списывается</div></div><div class="field"><div class="field-lbl">Название изделия</div><input id="wbb-nm" placeholder="Например: Стол Греция" autocomplete="off"></div><div class="field"><div class="field-lbl">Количество штук</div><div class="stpr-yld"><button onclick="wbbChg(-1)">&#8722;</button><span id="wbb-qty">1</span><button onclick="wbbChg(1)">+</button></div></div><div class="field"><div class="field-lbl">Причина (необязательно)</div><input id="wbb-reason" placeholder="Трещина, скол, загрязнение..." autocomplete="off"></div><button class="btn-primary" style="background:var(--red)" onclick="wbbSave()">Списать брак</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-wb-good-list" onclick="ovBg(event,'ov-wb-good-list')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" style="color:var(--green)">✓ Годный — выбери изделие</div><div class="sh-sub">200 ₽ за каждую штуку → на склад</div></div><div class="tiles" id="wb-good-tiles" style="padding:0;margin-bottom:14px"></div><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-wb-bad-list" onclick="ovBg(event,'ov-wb-bad-list')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" style="color:var(--red)">✕ Брак — выбери изделие</div><div class="sh-sub">Будет списано, на склад не идёт</div></div><div class="tiles" id="wb-bad-tiles" style="padding:0;margin-bottom:14px"></div><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-wb-qty" onclick="ovBg(event,'ov-wb-qty')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" id="wb-qty-title">Греция</div><div class="sh-sub" id="wb-qty-sub">200 ₽/шт</div></div><div class="pill-row pill-g" style="margin-bottom:10px"><div class="pill-nm pill-nm-g">Количество</div><div class="stpr"><button class="stbtn sg" onclick="wbQtyChg(-1)">&#8722;</button><span class="sv sv-g" id="wb-qty-val">1</span><button class="stbtn sg" onclick="wbQtyChg(1)">+</button></div></div><div class="earn-txt" id="wb-qty-earn"></div><button class="btn-primary" id="wb-qty-save-btn" onclick="wbQtySave()">Записать</button><button class="btn-cancel" onclick="backToWbList()">Назад</button></div></div><div class="overlay" id="ov-history" onclick="ovBg(event,'ov-history')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title">&#128197; Моя история</div><div class="sh-sub" id="hist-worker-name">по дням</div></div><div id="hist-body" style="margin-bottom:16px"></div><button class="btn-cancel" onclick="closeOv()">Закрыть</button></div></div><div class="toast-wrap" id="tw" style="display:none"><div class="toast" id="t-el"><div class="toast-dot" id="t-dot"></div><div class="toast-txt" id="t-txt"></div></div></div>
 </div>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
 firebase.initializeApp({apiKey:"AIzaSyCO9AZEt67j5KYRH6p8RnU6fl_Zjsg4f28",authDomain:"mebelcex-e3553.firebaseapp.com",databaseURL:"https://mebelcex-e3553-default-rtdb.europe-west1.firebasedatabase.app",projectId:"mebelcex-e3553",storageBucket:"mebelcex-e3553.firebasestorage.app",messagingSenderId:"694070291893",appId:"1:694070291893:web:9ca93e1a1b0c8874f53dfc"});
 var db=firebase.database();
-var USERS=[{id:'admin',name:'Владелец',init:'ВЫ',role:'admin',pin:'0000',avS:'background:#FAEEDA;color:#633806'},{id:'alex',name:'Алексей',init:'АЛ',role:'cnc',pin:'1111',avS:'background:#E6F1FB;color:#0C447C'},{id:'mikh',name:'Михаил',init:'МХ',role:'carp',pin:'2222',avS:'background:#E1F5EE;color:#085041'},{id:'serg',name:'Сергей',init:'СР',role:'sand',pin:'3333',avS:'background:#FAEEDA;color:#633806'},{id:'ivan',name:'Иван',init:'ИВ',role:'paint',pin:'4444',avS:'background:#FAECE7;color:#712B13'},{id:'dima',name:'Дмитрий',init:'ДМ',role:'pack',pin:'5555',avS:'background:#EEEDFE;color:#534AB7'},{id:'wb1',name:'Перепаковщик',init:'WB',role:'wb',pin:'6666',avS:'background:#F0EBF8;color:#6B21A8'}];
-var ROLE={admin:'Администратор',cnc:'ЧПУ-оператор',carp:'Столяр',sand:'Шлифовщик',paint:'Маляр',pack:'Упаковщик',wb:'Перепаковщик WB'};
+var USERS=[{id:'admin',name:'Администратор',init:'АД',role:'admin',pin:'0000',avS:'background:#FAEEDA;color:#633806'}];
+var ROLE={admin:'Администратор'};
 var ICOS=['🪑','🟤','⭐','🔶','🌿','💎','🌀','🔺','🎯','🟡'];
-var CU=null,selU=null,pinBuf='',opCtx={q:1,b:0,rate:50,uid:'',nm:'',ico:'🪑',stage:''},addYldV=4,addIcoIdx=0,addForRole='',admDayI=0,admDates=[],localTasks={cnc:[],carp:[],sand:[],paint:[],pack:[]},paidData={},fbL=[];
+var CU=null,selU=null,pinBuf='',opCtx={q:1,b:0,rate:50,uid:'',nm:'',ico:'🪑',stage:''},addYldV=4,addIcoIdx=0,addForRole='',admDayI=0,admDates=[],localTasks={},paidData={},fbL=[];
 function tdk(){return new Date().toISOString().slice(0,10);}
 window.addEventListener('load',function(){
   var loaded = false;
@@ -485,15 +475,23 @@ function chkPin(){
   if(found){CU=found;selU=found;pinBuf='';updDots();loginOk();}
   else{updDots(true);setTimeout(function(){pinBuf='';updDots();},700);}
 }
-function loginOk(){fbOff();if(CU.role==='admin'){startAdmin();goScreen('sc-admin');}else if(CU.role==='cnc'){startWorker('sc-cnc');}else if(CU.role==='carp'){startWorker('sc-carp');}else if(CU.role==='pack'){startPacker();goScreen('sc-pack');}else if(CU.role==='wb'){startWb();}else{startWorker('sc-work');}}
+function loginOk(){
+  fbOff();
+  if(CU.role==='admin'){ startAdmin(); goScreen('sc-admin'); }
+  else if(CU.role==='pack'){ startPacker(); goScreen('sc-pack'); }
+  else if(CU.role==='wb'){ startWb(); }
+  else { startWorker('sc-work'); }
+}
 function logout(){fbOff();CU=null;selU=null;pinBuf='';updDots();document.querySelectorAll('.user-btn').forEach(function(b){b.classList.remove('sel');});goScreen('sc-login');}
 function goScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');}
 function fbOff(){fbL.forEach(function(r){r.off();});fbL=[];}
 function startWorker(scId){
   var r=CU.role;
-  if(r==='cnc'){sv('cnc-name','Ассалам алайкум, '+CU.name);sty('cnc-av',CU.avS);sv('cnc-av',CU.init);renderTiles('cnc-tiles','cnc');}
-  else if(r==='carp'){sv('carp-name','Ассалам алайкум, '+CU.name);sty('carp-av',CU.avS);sv('carp-av',CU.init);renderTiles('carp-tiles','carp');}
-  else{sv('work-name','Ассалам алайкум, '+CU.name);sv('work-role',ROLE[r]);sty('work-av',CU.avS);sv('work-av',CU.init);renderTiles('work-tiles',r);}
+  sv('work-name','Ассалам алайкум, '+CU.name);
+  sv('work-role',ROLE[r]||r);
+  sty('work-av',CU.avS);
+  sv('work-av',CU.init);
+  renderTiles('work-tiles',r);
   if(CU.role==='paint') loadBrakAlerts();
   loadChainInfo(CU.role);
   var ref=db.ref('ops/'+tdk()+'/'+CU.id+'/summary');
@@ -502,15 +500,16 @@ function startWorker(scId){
   goScreen(scId);
 }
 function syncC(role,d){
-  if(role==='cnc'){sv('cnc-d',d.p||0);sv('cnc-e',fmt(d.e||0));sv('cnc-b',d.b||0);}
-  else if(role==='carp'){sv('carp-d',d.p||0);sv('carp-e',fmt(d.e||0));sv('carp-b',d.b||0);}
-  else{sv('work-d',d.p||0);sv('work-e',fmt(d.e||0));sv('work-b',d.b||0);}
+  sv('work-d',d.p||0);
+  sv('work-e',fmt(d.e||0));
+  sv('work-b',d.b||0);
 }
 function renderTiles(gid,role){
   var g=document.getElementById(gid);g.innerHTML='';
   (localTasks[role]||[]).forEach(function(t,i){
     var tile=document.createElement('div');tile.className='tile';
-    tile.innerHTML='<span class="tile-ico">'+t.ico+'</span><div class="tile-nm">'+t.nm+'</div><div class="tile-yl">'+t.rate+' ₽/шт</div>';
+    var limitBadge=t.dailyLimit>0?'<div style="display:inline-block;font-size:9px;padding:2px 6px;border-radius:5px;background:#FAEEDA;color:#633806;margin-top:4px">лимит: '+t.dailyLimit+' шт</div>':'';
+    tile.innerHTML='<span class="tile-ico">'+t.ico+'</span><div class="tile-nm">'+t.nm+'</div><div class="tile-yl">'+t.rate+' ₽/шт</div>'+limitBadge;
     tile.onclick=(function(task){return function(){openOp(task);};})(t);
     g.appendChild(tile);
   });
@@ -529,6 +528,28 @@ function openOp(task){opCtx={q:task.yld||1,b:0,rate:task.rate,uid:CU.id,nm:task.
 function opC(f,d){if(f==='q')opCtx.q=Math.max(0,opCtx.q+d);else opCtx.b=Math.max(0,opCtx.b+d);updOpE();}
 function updOpE(){sv('op-q',opCtx.q);sv('op-b',opCtx.b);var e=opCtx.q*opCtx.rate;sv('op-earn',opCtx.q+' × '+opCtx.rate+' ₽ = '+e+' ₽'+(opCtx.b>0?' · брак: '+opCtx.b:''));}
 function opSave(){
+  // Проверка лимита
+  if(opCtx.dailyLimit && opCtx.dailyLimit > 0){
+    db.ref('ops/'+tdk()+'/'+opCtx.uid+'/summary').once('value').then(function(snap){
+      var cur = (snap.val()||{p:0}).p||0;
+      if(cur + opCtx.q > opCtx.dailyLimit){
+        var remains = opCtx.dailyLimit - cur;
+        if(remains <= 0){
+          toast('Лимит на сегодня выполнен — '+opCtx.dailyLimit+' шт', true);
+          closeOv();
+          return;
+        }
+        opCtx.q = remains;
+        sv('op-q', opCtx.q);
+        toast('Количество уменьшено до лимита: '+remains+' шт', true);
+      }
+      doOpSave();
+    });
+  } else {
+    doOpSave();
+  }
+}
+function doOpSave(){
   var e=opCtx.q*opCtx.rate;var dk=tdk();var now=new Date();var ts=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
   db.ref('ops/'+dk+'/'+opCtx.uid+'/entries').push({nm:opCtx.nm,ico:opCtx.ico,stage:opCtx.stage,pcs:opCtx.q,earn:e,brak:opCtx.b,time:ts});
   if(CU.role==='cnc') deductMdf(opCtx.nm, opCtx.rate && localTasks.cnc ? (function(){var t=localTasks.cnc.find(function(x){return x.nm===opCtx.nm;});return t?t.yld:0;})() : 0, opCtx.q);
@@ -547,12 +568,21 @@ function startPacker(){
   loadChainInfo('pack');
   sty('pack-av',CU.avS);sv('pack-av',CU.init);
   renderTiles('pack-tiles','pack');
-  var ref=db.ref('ops/'+tdk()+'/dima/summary');
-  ref.on('value',function(s){var d=s.val()||{p:0,e:0,b:0};sv('pack-d',d.p||0);sv('pack-e',fmt(d.e||0));});
+  // Подписка на сегодняшние данные
+  fbL.forEach(function(r){try{r.off();}catch(e){}});
+  fbL=[];
+  _todaySubscribedKey = tdk();
+  var ref=db.ref('ops/'+tdk()+'/'+CU.id+'/summary');
+  ref.on('value',function(s){
+    var d=s.val()||{p:0,e:0,b:0};
+    sv('pack-d',d.p||0);
+    sv('pack-e',fmt(d.e||0));
+  });
   fbL.push(ref);
-  var ref2=db.ref('ops/'+tdk()+'/dima/stock');
+  var ref2=db.ref('ops/'+tdk()+'/'+CU.id+'/stock');
   ref2.on('value',function(s){sv('pack-s',s.val()||0);});
   fbL.push(ref2);
+  goScreen('sc-pack');
 }
 
 // ===== УПРАВЛЕНИЕ ЗАДАЧАМИ =====
@@ -1192,6 +1222,9 @@ function startWb(){
   sv('wb-av',CU.init);
   sty('wb-av',CU.avS);
   try{ loadWbHistory(); } catch(e){}
+  fbL.forEach(function(r){try{r.off();}catch(e){}});
+  fbL=[];
+  _todaySubscribedKey = tdk();
   var ref=db.ref('ops/'+tdk()+'/'+CU.id+'/summary');
   ref.on('value',function(s){
     var d=s.val()||{p:0,e:0,b:0};
@@ -1332,7 +1365,8 @@ function renderWbTiles(){
   var list=localTasks['pack']||[];
   list.forEach(function(t){
     var tile=document.createElement('div'); tile.className='tile';
-    tile.innerHTML='<span class="tile-ico">'+t.ico+'</span><div class="tile-nm">'+t.nm+'</div><div class="tile-yl">'+t.rate+' ₽/шт</div>';
+    var limitBadge=t.dailyLimit>0?'<div style="display:inline-block;font-size:9px;padding:2px 6px;border-radius:5px;background:#FAEEDA;color:#633806;margin-top:4px">лимит: '+t.dailyLimit+' шт</div>':'';
+    tile.innerHTML='<span class="tile-ico">'+t.ico+'</span><div class="tile-nm">'+t.nm+'</div><div class="tile-yl">'+t.rate+' ₽/шт</div>'+limitBadge;
     tile.onclick=(function(task){return function(){openWbOp(task);};})(t);
     g.appendChild(tile);
   });
@@ -1419,6 +1453,87 @@ function wbbSave(){
 }
 
 
+
+function openMyHistory(){
+  sv('hist-worker-name', CU.name+' — история работы');
+  var body = document.getElementById('hist-body');
+  body.innerHTML = '<div style="text-align:center;color:var(--ter);font-size:13px;padding:16px">Загрузка...</div>';
+  openOv('ov-history');
+
+  // Загрузить все ops для этого сотрудника
+  db.ref('ops').once('value').then(function(snap){
+    var allOps = snap.val() || {};
+    body.innerHTML = '';
+
+    // Фильтр только дни где есть данные этого сотрудника
+    var days = Object.keys(allOps)
+      .filter(function(dk){ return allOps[dk][CU.id] && allOps[dk][CU.id].summary; })
+      .sort().reverse();
+
+    if(!days.length){
+      body.innerHTML = '<div style="text-align:center;color:var(--ter);font-size:13px;padding:24px">Нет данных</div>';
+      return;
+    }
+
+    // Итого за всё время
+    var totalPcs=0, totalEarn=0;
+    days.forEach(function(dk){
+      var s = allOps[dk][CU.id].summary||{p:0,e:0};
+      totalPcs += s.p||0; totalEarn += s.e||0;
+    });
+
+    // Итого баннер
+    var banner = document.createElement('div');
+    banner.style.cssText = 'background:#085041;border-radius:var(--r);padding:12px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center';
+    banner.innerHTML = '<div><div style="font-size:10px;color:#9FE1CB;margin-bottom:2px">Всего за всё время</div>'
+      +'<div style="font-size:22px;font-weight:500;color:white">'+totalPcs+' шт</div></div>'
+      +'<div style="text-align:right"><div style="font-size:10px;color:#9FE1CB;margin-bottom:2px">Заработано</div>'
+      +'<div style="font-size:22px;font-weight:500;color:white">'+fmt(totalEarn)+'</div></div>';
+    body.appendChild(banner);
+
+    // По дням
+    days.forEach(function(dk){
+      var s = allOps[dk][CU.id].summary||{p:0,e:0,b:0};
+      var entries = allOps[dk][CU.id].entries ? Object.values(allOps[dk][CU.id].entries) : [];
+      var isToday = dk===tdk();
+      var dl = isToday ? 'Сегодня' : new Date(dk+'T12:00:00').toLocaleDateString('ru',{day:'numeric',month:'long'});
+
+      var card = document.createElement('div');
+      card.style.cssText = 'border-radius:var(--rs);border:0.5px solid var(--border);background:var(--card);overflow:hidden;margin-bottom:8px';
+
+      // Заголовок дня
+      var dayHead = document.createElement('div');
+      dayHead.style.cssText = 'padding:9px 14px;background:var(--bg);border-bottom:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center';
+      dayHead.innerHTML = '<div style="font-size:12px;font-weight:500;color:var(--text)">'+dl+(isToday?' 🟢':'')+'</div>'
+        +'<div style="display:flex;gap:12px">'
+        +'<div style="text-align:right"><div style="font-size:13px;font-weight:500;color:var(--text)">'+(s.p||0)+' шт</div>'
+        +'<div style="font-size:10px;color:#1D9E75">'+fmt(s.e||0)+'</div></div>'
+        +'</div>';
+      card.appendChild(dayHead);
+
+      // Операции дня
+      entries.forEach(function(op){
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:0.5px solid var(--border)';
+        row.innerHTML = '<div style="font-size:18px">'+op.ico+'</div>'
+          +'<div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text)">'+op.nm+'</div>'
+          +'<div style="font-size:10px;color:var(--sub)">'+op.time+'</div></div>'
+          +'<div style="text-align:right">'
+          +'<div style="font-size:13px;font-weight:500;color:var(--text)">'+op.pcs+' шт</div>'
+          +'<div style="font-size:10px;color:#1D9E75">'+fmt(op.earn)+'</div>'
+          +(op.brak>0?'<div style="font-size:10px;color:#E24B4A">брак: '+op.brak+'</div>':'')
+          +'</div>';
+        row.style.borderBottom='0.5px solid var(--border)';
+        card.appendChild(row);
+      });
+      // Убрать border у последней строки
+      var rows=card.querySelectorAll('div[style*="border-bottom"]');
+      if(rows.length) rows[rows.length-1].style.borderBottom='none';
+
+      body.appendChild(card);
+    });
+  });
+}
 function startAdmin(){admDayI=0;admDates=[];for(var i=0;i<30;i++){var d=new Date();d.setDate(d.getDate()-i);admDates.push(d.toISOString().slice(0,10));}renderAdmDay();}
 function admDay(d){admDayI=Math.max(0,Math.min(admDates.length-1,admDayI+d));renderAdmDay();}
 function renderAdmDay(){
