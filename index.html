@@ -163,7 +163,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
 <div class="screen" id="sc-work">
   <div class="topbar"><div><div class="tb-title" id="work-name">Сергей</div><div class="tb-sub" id="work-role">Шлифовщик</div></div><div class="tb-av" id="work-av" onclick="logout()"></div></div>
   <div class="mets" style="grid-template-columns:1fr 1fr"><div class="met mb" onclick="openMyLog()" style="cursor:pointer"><div class="mv" id="work-d">0</div><div class="ml">сделал ✎</div></div><div class="met mg"><div class="mv" id="work-e">0 ₽</div><div class="ml">заработал</div></div></div>  <button onclick="openMyHistory()" style="margin:6px 16px 0;width:calc(100% - 32px);padding:10px;background:var(--card);border:0.5px solid var(--border);border-radius:var(--rs);font-size:13px;font-weight:500;color:var(--blue);cursor:pointer;display:flex;align-items:center;justify-content:space-between"><span>&#128197; Моя история по дням</span><span style="color:var(--ter)">›</span></button>
-  <div id="chain-info" style="display:none;margin:6px 16px 0;background:var(--blue-l);border-radius:var(--rs);padding:8px 12px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:12px;color:var(--blue);font-weight:500" id="chain-lbl">Готово к обработке</div><div style="font-size:18px;font-weight:700;color:var(--blue)" id="chain-cnt">—</div></div><div class="slbl">Этапы</div><div class="scroll"><div id="brak-alerts" style="display:none;margin:0 16px 8px"></div><div class="tiles" id="work-tiles"></div></div>
+<div class="slbl">Этапы</div><div class="scroll"><div id="brak-alerts" style="display:none;margin:0 16px 8px"></div><div class="tiles" id="work-tiles"></div></div>
 </div>
 <div class="screen" id="sc-admin">
   <div class="topbar" style="padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 12px"><div><div style="font-size:11px;color:var(--ter)" id="adm-date-lbl">Понедельник</div><div class="tb-title">Цех</div></div><div class="tb-av" onclick="logout()" style="background:#FAEEDA;color:#633806;font-size:15px">👤</div></div>
@@ -193,7 +193,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
 <div class="screen" id="sc-pack">
   <div class="topbar"><div><div class="tb-title" id="pack-name">Дмитрий</div><div class="tb-sub">Упаковщик</div></div><div class="tb-av" id="pack-av" onclick="logout()"></div></div>
   <div class="mets"><div class="met mb" onclick="openMyLog()" style="cursor:pointer"><div class="mv" id="pack-d">0</div><div class="ml">упаковал ✎</div></div><div class="met mg"><div class="mv" id="pack-e">0 ₽</div><div class="ml">заработал</div></div><div class="met" style="background:#EEEDFE"><div class="mv" id="pack-s" style="color:#534AB7">0</div><div class="ml" style="color:#7F77DD">на склад</div></div></div>
-  <div class="slbl">Выбери изделие</div><div class="scroll"><div class="tiles" id="pack-tiles"></div><div id="pack-chain" style="margin:8px 16px 4px;background:var(--blue-l);border-radius:var(--rs);padding:8px 12px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:12px;color:var(--blue);font-weight:500">Готово от маляра</div><div style="font-size:18px;font-weight:700;color:var(--blue)" id="pack-chain-cnt">—</div></div><button onclick="openOv('ov-brak')" style="margin:0 16px 8px;width:calc(100% - 32px);padding:14px;background:#FCEBEB;color:#A32D2D;border:1.5px solid #F09595;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">&#9888; Отметить брак</button><button onclick="openOv('ov-wb')" style="margin:0 16px 16px;width:calc(100% - 32px);padding:14px;background:#EEEDFE;color:#534AB7;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">&#128230; Возврат WB</button></div>
+  <div class="slbl">Выбери изделие</div><div class="scroll"><div class="tiles" id="pack-tiles"></div><button onclick="openOv('ov-brak')" style="margin:0 16px 8px;width:calc(100% - 32px);padding:14px;background:#FCEBEB;color:#A32D2D;border:1.5px solid #F09595;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">&#9888; Отметить брак</button><button onclick="openOv('ov-wb')" style="margin:0 16px 16px;width:calc(100% - 32px);padding:14px;background:#EEEDFE;color:#534AB7;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">&#128230; Возврат WB</button></div>
 </div>
 
 <div class="screen" id="sc-staff">
@@ -493,7 +493,9 @@ function startWorker(scId){
   sv('work-av',CU.init);
   renderTiles('work-tiles',r);
   if(CU.role==='paint') loadBrakAlerts();
-  loadChainInfo(CU.role);
+  fbL.forEach(function(ref){try{ref.off();}catch(e){}});
+  fbL=[];
+  _todaySubscribedKey=tdk();
   var ref=db.ref('ops/'+tdk()+'/'+CU.id+'/summary');
   ref.on('value',function(s){var d=s.val()||{p:0,e:0,b:0};syncC(r,d);});
   fbL.push(ref);
@@ -550,12 +552,35 @@ function opSave(){
   }
 }
 function doOpSave(){
-  var e=opCtx.q*opCtx.rate;var dk=tdk();var now=new Date();var ts=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
-  db.ref('ops/'+dk+'/'+opCtx.uid+'/entries').push({nm:opCtx.nm,ico:opCtx.ico,stage:opCtx.stage,pcs:opCtx.q,earn:e,brak:opCtx.b,time:ts});
-  if(CU.role==='cnc') deductMdf(opCtx.nm, opCtx.rate && localTasks.cnc ? (function(){var t=localTasks.cnc.find(function(x){return x.nm===opCtx.nm;});return t?t.yld:0;})() : 0, opCtx.q);
-  db.ref('ops/'+dk+'/'+opCtx.uid+'/summary').transaction(function(c){c=c||{p:0,e:0,b:0};c.p+=opCtx.q;c.e+=e;c.b+=opCtx.b;return c;});
-  if(opCtx.uid==='dima'||CU.role==='wb'){db.ref('stock/'+opCtx.nm).transaction(function(c){c=c||{total:0,lastDate:''};c.total+=opCtx.q;c.lastDate=dk;return c;});db.ref('ops/'+dk+'/dima/stock').transaction(function(c){return (c||0)+opCtx.q;});}
-  toast(opCtx.nm+' · '+opCtx.q+' шт · '+e+' ₽',false);closeOv();
+  var e=opCtx.q*opCtx.rate;
+  var dk=tdk();
+  var now=new Date();
+  var ts=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
+  // Записать операцию
+  db.ref('ops/'+dk+'/'+opCtx.uid+'/entries').push({
+    nm:opCtx.nm,ico:opCtx.ico,stage:opCtx.stage,
+    pcs:opCtx.q,earn:e,brak:opCtx.b,time:ts
+  });
+  // Обновить сводку
+  db.ref('ops/'+dk+'/'+opCtx.uid+'/summary').transaction(function(c){
+    c=c||{p:0,e:0,b:0};
+    c.p+=opCtx.q; c.e+=e; c.b+=opCtx.b;
+    return c;
+  });
+  // Списать МДФ если задача с yld
+  if(opCtx.yld && opCtx.yld>0){
+    deductMdf(opCtx.nm, opCtx.yld, opCtx.q);
+  }
+  // Если упаковщик или wb — на склад
+  if(CU.role==='pack'||CU.role==='wb'){
+    db.ref('stock/'+opCtx.nm).transaction(function(c){
+      c=c||{total:0,lastDate:''};
+      c.total+=opCtx.q; c.lastDate=dk;
+      return c;
+    });
+  }
+  toast(opCtx.nm+' · '+opCtx.q+' шт · '+e+' ₽',false);
+  closeOv();
 }
 
 function openAdd(role){addForRole=role;addYldV=4;addIcoIdx=0;document.getElementById('add-nm').value='';document.getElementById('add-rate').value='';sv('add-yld-v',4);sv('add-title',role==='carp'?'Новая задача':(role==='cnc'?'Новый стол':'Новый этап'));document.querySelectorAll('.ico-opt').forEach(function(o,i){o.className='ico-opt'+(i===0?' sel':'');});openOv('ov-add');}
@@ -565,7 +590,6 @@ function addSave(){var nm=document.getElementById('add-nm').value.trim();var rat
 
 function startPacker(){
   sv('pack-name','Ассалам алайкум, '+CU.name);
-  loadChainInfo('pack');
   sty('pack-av',CU.avS);sv('pack-av',CU.init);
   renderTiles('pack-tiles','pack');
   // Подписка на сегодняшние данные
@@ -1128,42 +1152,7 @@ function deductMdf(taskNm, taskYld, pcs){
   });
 }
 
-// ===== ЦЕПОЧКА ПРОИЗВОДСТВА =====
-var CHAIN_MAP = {sand:'cnc', paint:'sand', pack:'paint'};
-var CHAIN_USERS = {
-  cnc: function(){ return USERS.filter(function(u){return u.role==='cnc';}); },
-  sand: function(){ return USERS.filter(function(u){return u.role==='sand';}); },
-  paint: function(){ return USERS.filter(function(u){return u.role==='paint';}); },
-};
 
-function loadChainInfo(myRole){
-  var prevRole = CHAIN_MAP[myRole];
-  if(!prevRole) return;
-  // Суммируем всех сотрудников с этой ролью за сегодня
-  var prevUsers = CHAIN_USERS[prevRole] ? CHAIN_USERS[prevRole]() : [];
-  if(!prevUsers.length) return;
-  var total = 0;
-  var loaded = 0;
-  prevUsers.forEach(function(u){
-    db.ref('ops/'+tdk()+'/'+u.id+'/summary').once('value').then(function(snap){
-      var d = snap.val() || {p:0};
-      total += d.p || 0;
-      loaded++;
-      if(loaded === prevUsers.length){
-        // Показать в блоке
-        // Обновляем счётчики очереди
-        if(myRole === 'pack'){
-          sv('pack-chain-cnt', total+' шт');
-        } else {
-          var el = document.getElementById('chain-info');
-          if(el){ el.style.display='flex'; sv('chain-cnt', total+' шт'); }
-          var lblMap = {sand:'Готово от ЧПУ', paint:'Готово от шлифовки'};
-          if(document.getElementById('chain-lbl')) sv('chain-lbl', lblMap[myRole]||'');
-        }
-      }
-    });
-  });
-}
 
 // ===== ВОЗВРАТЫ WB =====
 var wbQty = 1;
