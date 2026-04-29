@@ -483,9 +483,9 @@ function goScreen(id){document.querySelectorAll('.screen').forEach(function(s){s
 function fbOff(){fbL.forEach(function(r){r.off();});fbL=[];}
 function startWorker(scId){
   var r=CU.role;
-  if(r==='cnc'){sv('cnc-name','Привет, '+CU.name);sty('cnc-av',CU.avS);sv('cnc-av',CU.init);renderTiles('cnc-tiles','cnc');}
-  else if(r==='carp'){sv('carp-name','Привет, '+CU.name);sty('carp-av',CU.avS);sv('carp-av',CU.init);renderTiles('carp-tiles','carp');}
-  else{sv('work-name','Привет, '+CU.name);sv('work-role',ROLE[r]);sty('work-av',CU.avS);sv('work-av',CU.init);renderTiles('work-tiles',r);}
+  if(r==='cnc'){sv('cnc-name','Ассалам алайкум, '+CU.name);sty('cnc-av',CU.avS);sv('cnc-av',CU.init);renderTiles('cnc-tiles','cnc');}
+  else if(r==='carp'){sv('carp-name','Ассалам алайкум, '+CU.name);sty('carp-av',CU.avS);sv('carp-av',CU.init);renderTiles('carp-tiles','carp');}
+  else{sv('work-name','Ассалам алайкум, '+CU.name);sv('work-role',ROLE[r]);sty('work-av',CU.avS);sv('work-av',CU.init);renderTiles('work-tiles',r);}
   if(CU.role==='paint') loadBrakAlerts();
   var ref=db.ref('ops/'+tdk()+'/'+CU.id+'/summary');
   ref.on('value',function(s){var d=s.val()||{p:0,e:0,b:0};syncC(r,d);});
@@ -534,7 +534,7 @@ function aIco(i){addIcoIdx=i;document.querySelectorAll('.ico-opt').forEach(funct
 function addSave(){var nm=document.getElementById('add-nm').value.trim();var rate=parseInt(document.getElementById('add-rate').value)||0;if(!nm){document.getElementById('add-nm').style.borderColor='#E24B4A';return;}var t={nm:nm,rate:rate,yld:addYldV,ico:ICOS[addIcoIdx]};if(!localTasks[addForRole])localTasks[addForRole]=[];localTasks[addForRole].push(t);db.ref('tasks/'+addForRole).push(t);if(addForRole==='cnc')renderTiles('cnc-tiles','cnc');else if(addForRole==='carp')renderTiles('carp-tiles','carp');else renderTiles('work-tiles',addForRole);toast('Добавлено: '+nm,false);closeOv();}
 
 function startPacker(){
-  sv('pack-name','Привет, '+CU.name);
+  sv('pack-name','Ассалам алайкум, '+CU.name);
   sty('pack-av',CU.avS);sv('pack-av',CU.init);
   renderTiles('pack-tiles','pack');
   var ref=db.ref('ops/'+tdk()+'/dima/summary');
