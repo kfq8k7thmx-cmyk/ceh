@@ -289,39 +289,70 @@ var ICOS=['🪑','🟤','⭐','🔶','🌿','💎','🌀','🔺','🎯','🟡'];
 var CU=null,selU=null,pinBuf='',opCtx={q:1,b:0,rate:50,uid:'',nm:'',ico:'🪑',stage:''},addYldV=4,addIcoIdx=0,addForRole='',admDayI=0,admDates=[],localTasks={cnc:[],carp:[],sand:[],paint:[],pack:[]},paidData={},fbL=[];
 function tdk(){return new Date().toISOString().slice(0,10);}
 window.addEventListener('load',function(){
+  var loaded = false;
+  function finishLoad(){
+    if(loaded) return;
+    loaded = true;
+    setTimeout(function(){ document.getElementById('loading').classList.add('hide'); }, 400);
+  }
+  // Таймаут — если Firebase не отвечает 5 сек, всё равно показываем экран
+  setTimeout(finishLoad, 5000);
+
+  // Загрузить задачи
   db.ref('tasks').once('value').then(function(s){
-    var d=s.val()||{};
-    ['cnc','carp','sand','paint','pack'].forEach(function(r){localTasks[r]=d[r]?Object.values(d[r]):[];});
+    var d = s.val() || {};
+    ['cnc','carp','sand','paint','pack'].forEach(function(r){
+      localTasks[r] = d[r] ? Object.values(d[r]) : [];
+    });
+  }).catch(function(){});
 
-    // Загрузить кастомные роли, потом сотрудников
-    loadCustomRoles(function(){
-    db.ref('users').once('value').then(function(us){
-      var ud = us.val() || {};
-      var avColors = ['background:#E6F1FB;color:#0C447C','background:#E1F5EE;color:#085041','background:#FAEEDA;color:#633806','background:#FAECE7;color:#712B13','background:#EEEDFE;color:#534AB7','background:#FCEBEB;color:#A32D2D','background:#EAF3DE;color:#3B6D11'];
-      // Обновить существующих
-      USERS.forEach(function(u){
-        if(ud[u.id]){
-          u.name = ud[u.id].name || u.name;
-          u.pin = ud[u.id].pin || u.pin;
-          u.role = ud[u.id].role || u.role;
-          u.init = u.name.slice(0,2).toUpperCase();
-          delete ud[u.id];
-        }
-      });
-      // Добавить новых которых нет в дефолтном списке
-      Object.keys(ud).forEach(function(uid){
-        var u = ud[uid];
-        if(u && u.name){
-          USERS.push({id:uid, name:u.name, init:u.name.slice(0,2).toUpperCase(), role:u.role||'cnc', pin:u.pin||'0000', avS:avColors[USERS.length % avColors.length]});
-        }
-      });
-      renderUsers();
-    }).catch(function(){ renderUsers(); });
-    }); // end loadCustomRoles
+  // Загрузить кастомные роли
+  db.ref('customRoles').once('value').then(function(snap){
+    var data = snap.val() || {};
+    Object.keys(data).forEach(function(roleId){
+      ROLE[roleId] = data[roleId].name;
+      if(!localTasks[roleId]) localTasks[roleId] = [];
+    });
+  }).catch(function(){});
 
-    setTimeout(function(){document.getElementById('loading').classList.add('hide');},600);
-  }).catch(function(){renderUsers();setTimeout(function(){document.getElementById('loading').classList.add('hide');},600);});
+  // Загрузить сотрудников из Firebase (перезаписать дефолтных)
+  db.ref('users').once('value').then(function(us){
+    var ud = us.val() || {};
+    var avColors = [
+      'background:#E6F1FB;color:#0C447C',
+      'background:#E1F5EE;color:#085041',
+      'background:#FAEEDA;color:#633806',
+      'background:#FAECE7;color:#712B13',
+      'background:#EEEDFE;color:#534AB7',
+      'background:#FCEBEB;color:#A32D2D',
+      'background:#EAF3DE;color:#3B6D11'
+    ];
+    // Обновить существующих
+    USERS.forEach(function(u){
+      if(ud[u.id]){
+        u.name = ud[u.id].name || u.name;
+        u.pin = ud[u.id].pin || u.pin;
+        u.role = ud[u.id].role || u.role;
+        u.init = u.name.slice(0,2).toUpperCase();
+        delete ud[u.id];
+      }
+    });
+    // Добавить новых
+    Object.keys(ud).forEach(function(uid){
+      var u = ud[uid];
+      if(u && u.name){
+        USERS.push({
+          id:uid, name:u.name,
+          init:u.name.slice(0,2).toUpperCase(),
+          role:u.role||'cnc', pin:u.pin||'0000',
+          avS:avColors[USERS.length % avColors.length]
+        });
+      }
+    });
+    finishLoad();
+  }).catch(function(){ finishLoad(); });
 });
+;
 
 var editIdx = -1;
 
