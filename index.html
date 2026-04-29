@@ -338,6 +338,8 @@ function openAddStaff(){
 function renderRoleButtons(containerId, selectedRole, onSelect){
   var roles = ['cnc','carp','sand','paint','pack'];
   var roleNames = {cnc:'ЧПУ-оператор',carp:'Столяр',sand:'Шлифовщик',paint:'Маляр',pack:'Упаковщик'};
+  // Добавить кастомные роли созданные администратором
+  Object.keys(ROLE).forEach(function(r){ if(roles.indexOf(r)===-1 && r!=='admin'){ roles.push(r); roleNames[r]=ROLE[r]; } });
   var rc = document.getElementById(containerId);
   rc.innerHTML = '';
   roles.forEach(function(r){
