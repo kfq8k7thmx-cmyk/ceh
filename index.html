@@ -218,7 +218,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
     <div class="spacer"></div>
   </div>
 </div>
-<div class="screen" id="sc-mdf"><div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-admin')">&#8249;</div><div style="flex:1"><div class="tb-title">Склад МДФ</div><div class="tb-sub">остаток листов по видам</div></div></div><div class="scroll"><div class="slbl">Остаток на складе</div><div id="mdf-summary" style="padding:0 16px 8px"></div><button onclick="openMdfAdd()" style="margin:0 16px 12px;width:calc(100% - 32px);padding:13px;background:var(--amber-l);color:var(--amber);border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">+ Добавить листы МДФ</button><div class="slbl">История расхода</div><div id="mdf-history" style="padding:0 16px"></div><div class="spacer"></div></div></div><div class="screen" id="sc-stock"><div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-admin')">&#8249;</div><div style="flex:1"><div class="tb-title">Склад</div><div class="tb-sub">что упаковано и когда</div></div></div><div class="scroll"><div class="slbl">Итого по изделиям</div><div id="stock-summary" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 8px"></div><div class="slbl">История по дням</div><div id="stock-list"></div><div class="spacer"></div></div></div><div class="screen" id="sc-taskmgr"><div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-staff')">&#8249;</div><div style="flex:1"><div class="tb-title">Управление задачами</div><div class="tb-sub">добавляй, редактируй, удаляй</div></div></div><div class="scroll"><div style="display:flex;gap:8px;padding:10px 16px 4px;overflow-x:auto;flex-shrink:0" id="role-tabs"></div><div id="task-mgr-tiles" style="padding:8px 16px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px"></div><div class="spacer"></div></div></div><div class="screen" id="sc-wb"><div class="topbar"><div><div class="tb-title" id="wb-name">Перепаковщик</div><div class="tb-sub">Перепаковка WB · 200 ₽/шт</div></div><div class="tb-av" id="wb-av" onclick="logout()" style="background:#F0EBF8;color:#6B21A8"></div></div><div class="mets" style="grid-template-columns:1fr 1fr 1fr"><div class="met mb"><div class="mv" id="wb-d">0</div><div class="ml">принято</div></div><div class="met mg"><div class="mv" id="wb-e">0 ₽</div><div class="ml">заработал</div></div><div class="met mr"><div class="mv" id="wb-bad-cnt">0</div><div class="ml">брак</div></div></div><div class="slbl">Выбери действие</div><div class="scroll" style="padding:0 16px 16px"><div onclick="openWbGoodList()" style="background:var(--green-l);border-radius:var(--r);padding:18px 16px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:14px;border:1.5px solid var(--green-v)"><div style="width:48px;height:48px;border-radius:50%;background:var(--green-v);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">✓</div><div><div style="font-size:16px;font-weight:600;color:var(--green)">Годный товар</div><div style="font-size:12px;color:var(--green-v);margin-top:3px">Выбрать изделие → на склад</div></div></div><div onclick="openWbBadList()" style="background:var(--red-l);border-radius:var(--r);padding:18px 16px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:14px;border:1.5px solid #F09595"><div style="width:48px;height:48px;border-radius:50%;background:var(--red-v);display:flex;align-items:center;justify-content:center;font-size:24px;color:white;flex-shrink:0">✕</div><div><div style="font-size:16px;font-weight:600;color:var(--red)">Брак / повреждён</div><div style="font-size:12px;color:var(--red-v);margin-top:3px">Выбрать изделие → списать</div></div></div><div style="font-size:10px;font-weight:600;color:var(--ter);letter-spacing:.08em;text-transform:uppercase;padding:8px 0 6px">История за сегодня</div><div id="wb-history-list"></div></div></div>
+<div class="screen" id="sc-mdf"><div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-admin')">&#8249;</div><div style="flex:1"><div class="tb-title">Склад МДФ</div><div class="tb-sub">остаток листов по видам</div></div></div><div class="scroll"><div class="slbl">Остаток на складе</div><div id="mdf-summary" style="padding:0 16px 8px"></div><button onclick="openMdfAdd()" style="margin:0 16px 12px;width:calc(100% - 32px);padding:13px;background:var(--amber-l);color:var(--amber);border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">+ Добавить листы МДФ</button><div class="slbl">История расхода</div><div id="mdf-history" style="padding:0 16px"></div><div class="spacer"></div></div></div><div class="screen" id="sc-stock"><div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-admin')">&#8249;</div><div style="flex:1"><div class="tb-title">Склад</div><div class="tb-sub">готовая продукция</div></div></div><div class="scroll"><div class="slbl">Топ изделий за всё время</div><div id="stock-summary" style="margin:0 16px 12px;border-radius:var(--r);border:0.5px solid var(--border);overflow:hidden;background:var(--card)"></div><div class="slbl">История по дням</div><div id="stock-list"></div><div style="height:16px"></div></div></div>
+<div class="screen" id="sc-taskmgr"><div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-staff')">&#8249;</div><div style="flex:1"><div class="tb-title">Управление задачами</div><div class="tb-sub">добавляй, редактируй, удаляй</div></div></div><div class="scroll"><div style="display:flex;gap:8px;padding:10px 16px 4px;overflow-x:auto;flex-shrink:0" id="role-tabs"></div><div id="task-mgr-tiles" style="padding:8px 16px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px"></div><div class="spacer"></div></div></div><div class="screen" id="sc-wb"><div class="topbar"><div><div class="tb-title" id="wb-name">Перепаковщик</div><div class="tb-sub">Перепаковка WB · 200 ₽/шт</div></div><div class="tb-av" id="wb-av" onclick="logout()" style="background:#F0EBF8;color:#6B21A8"></div></div><div class="mets" style="grid-template-columns:1fr 1fr 1fr"><div class="met mb"><div class="mv" id="wb-d">0</div><div class="ml">принято</div></div><div class="met mg"><div class="mv" id="wb-e">0 ₽</div><div class="ml">заработал</div></div><div class="met mr"><div class="mv" id="wb-bad-cnt">0</div><div class="ml">брак</div></div></div><div class="slbl">Выбери действие</div><div class="scroll" style="padding:0 16px 16px"><div onclick="openWbGoodList()" style="background:var(--green-l);border-radius:var(--r);padding:18px 16px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:14px;border:1.5px solid var(--green-v)"><div style="width:48px;height:48px;border-radius:50%;background:var(--green-v);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">✓</div><div><div style="font-size:16px;font-weight:600;color:var(--green)">Годный товар</div><div style="font-size:12px;color:var(--green-v);margin-top:3px">Выбрать изделие → на склад</div></div></div><div onclick="openWbBadList()" style="background:var(--red-l);border-radius:var(--r);padding:18px 16px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:14px;border:1.5px solid #F09595"><div style="width:48px;height:48px;border-radius:50%;background:var(--red-v);display:flex;align-items:center;justify-content:center;font-size:24px;color:white;flex-shrink:0">✕</div><div><div style="font-size:16px;font-weight:600;color:var(--red)">Брак / повреждён</div><div style="font-size:12px;color:var(--red-v);margin-top:3px">Выбрать изделие → списать</div></div></div><div style="font-size:10px;font-weight:600;color:var(--ter);letter-spacing:.08em;text-transform:uppercase;padding:8px 0 6px">История за сегодня</div><div id="wb-history-list"></div></div></div>
 <div class="overlay" id="ov-op" onclick="ovBg(event,'ov-op')">
   <div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" id="op-title">Задача</div><div class="sh-sub" id="op-sub">50 ₽/шт</div></div>
   <div class="row-lbl">Готовые изделия</div>
@@ -735,50 +736,75 @@ function goStock(){
   goScreen('sc-stock');
   var summary=document.getElementById('stock-summary');
   var list=document.getElementById('stock-list');
-  summary.innerHTML='<div style="grid-column:1/-1;font-size:12px;color:var(--ter);padding:8px">Загрузка...</div>';
+  summary.innerHTML='<div style="padding:14px;text-align:center;font-size:12px;color:var(--ter)">Загрузка...</div>';
   list.innerHTML='';
+
+  // Рейтинг изделий
   db.ref('stock').once('value').then(function(snap){
     var data=snap.val()||{};
     summary.innerHTML='';
     var keys=Object.keys(data);
     if(!keys.length){
-      summary.innerHTML='<div style="grid-column:1/-1;padding:20px;text-align:center;font-size:13px;color:var(--ter)">Упаковщик ещё ничего не сдал</div>';
+      summary.innerHTML='<div style="padding:20px;text-align:center;font-size:13px;color:var(--ter)">Склад пуст</div>';
     } else {
-      keys.forEach(function(nm){
+      // Сортировка по количеству
+      keys.sort(function(a,b){ return (data[b].total||0)-(data[a].total||0); });
+      var max=data[keys[0]].total||1;
+      var barColors=['#1D9E75','#378ADD','#EF9F27','#7F77DD','#D85A30','#E24B4A','#639922'];
+      keys.forEach(function(nm,i){
         var item=data[nm];
-        var card=document.createElement('div');
-        card.style.cssText='background:var(--green-l);border-radius:var(--rs);padding:12px 10px;text-align:center';
-        card.innerHTML='<div style="font-size:24px;font-weight:700;color:var(--green)">'+(item.total||0)+'</div>'
-          +'<div style="font-size:11px;font-weight:600;color:var(--green);margin-top:3px">'+nm+'</div>'
-          +'<div style="font-size:10px;color:var(--green-v);margin-top:2px">последний: '+fmtDate(item.lastDate)+'</div>';
-        summary.appendChild(card);
+        var qty=item.total||0;
+        var pct=Math.round(qty/max*100);
+        var color=barColors[i%barColors.length];
+        var row=document.createElement('div');
+        row.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:0.5px solid var(--border)';
+        if(i===keys.length-1) row.style.borderBottom='none';
+        row.innerHTML='<div style="font-size:13px;font-weight:500;color:'+(i<2?'#BA7517':'var(--ter)')+';width:16px;text-align:center;flex-shrink:0">'+(i+1)+'</div>'
+          +'<div style="flex:1">'
+          +'<div style="font-size:12px;font-weight:500;color:var(--text)">'+nm+'</div>'
+          +'<div style="height:3px;background:var(--border);border-radius:2px;margin-top:5px;overflow:hidden">'
+          +'<div style="height:3px;border-radius:2px;width:'+pct+'%;background:'+color+'"></div>'
+          +'</div></div>'
+          +'<div style="text-align:right;flex-shrink:0">'
+          +'<div style="font-size:16px;font-weight:500;color:var(--text)">'+qty+'</div>'
+          +'<div style="font-size:10px;color:var(--ter)">шт</div>'
+          +'</div>';
+        summary.appendChild(row);
       });
     }
   });
+
+  // История по дням
   db.ref('ops').once('value').then(function(snap){
     var allOps=snap.val()||{};
     list.innerHTML='';
-    var packUsers=USERS.filter(function(u){return u.role==='pack';});
-    Object.keys(allOps).sort().reverse().forEach(function(dk){
+    var packUsers=USERS.filter(function(u){return u.role==='pack'||u.role==='wb';});
+    var days=Object.keys(allOps).sort().reverse();
+    days.forEach(function(dk){
       var rows='';
       packUsers.forEach(function(pu){
         var ud=allOps[dk][pu.id];
         if(!ud||!ud.entries)return;
         Object.values(ud.entries).forEach(function(op){
-          rows+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border)">'
-            +'<div style="font-size:20px">'+op.ico+'</div>'
-            +'<div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--text)">'+op.nm+'</div>'
-            +'<div style="font-size:11px;color:var(--sub)">'+pu.name+' · '+op.time+'</div></div>'
-            +'<div style="text-align:right"><div style="font-size:15px;font-weight:700;color:var(--green)">'+op.pcs+' шт</div>'
-            +'<div style="font-size:11px;color:var(--sub)">'+fmt(op.earn)+'</div></div></div>';
+          if(op.brak>0&&op.pcs===0)return;
+          rows+='<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:0.5px solid var(--border)">'
+            +'<div style="font-size:18px;flex-shrink:0">'+op.ico+'</div>'
+            +'<div style="flex:1">'
+            +'<div style="font-size:12px;font-weight:500;color:var(--text)">'+op.nm+'</div>'
+            +'<div style="font-size:10px;color:var(--sub);margin-top:1px">'+pu.name+' · '+op.time+'</div>'
+            +'</div>'
+            +'<div style="text-align:right;flex-shrink:0">'
+            +'<div style="font-size:14px;font-weight:500;color:#085041">'+op.pcs+' шт</div>'
+            +'</div></div>';
         });
       });
       if(rows){
         var block=document.createElement('div');
-        block.style.cssText='margin:0 16px 12px;background:var(--card);border-radius:var(--r);border:0.5px solid var(--border);overflow:hidden';
-        block.innerHTML='<div style="padding:8px 14px;background:var(--bg);border-bottom:0.5px solid var(--border)">'
-          +'<div style="font-size:12px;font-weight:600;color:var(--text)">'+fmtDate(dk)+'</div></div>'
-          +'<div style="padding:0 14px">'+rows+'</div>';
+        block.style.cssText='margin:0 16px 10px;border-radius:var(--r);border:0.5px solid var(--border);overflow:hidden;background:var(--card)';
+        var dl=new Date(dk+'T12:00:00').toLocaleDateString('ru',{day:'numeric',month:'long'});
+        block.innerHTML='<div style="padding:7px 12px;background:var(--bg);border-bottom:0.5px solid var(--border);font-size:11px;font-weight:500;color:var(--text)">'+dl+'</div>'
+          +'<div>'+rows+'</div>';
+        // Убрать border у последней строки
         list.appendChild(block);
       }
     });
@@ -787,6 +813,7 @@ function goStock(){
     }
   });
 }
+
 function fmtDate(dk){
   if(!dk)return '';
   try{return new Date(dk+'T12:00:00').toLocaleDateString('ru',{day:'numeric',month:'long'});}
