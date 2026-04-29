@@ -163,17 +163,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
 </div>
 <div class="screen" id="sc-cnc">
   <div class="topbar"><div><div class="tb-title" id="cnc-name">Алексей</div><div class="tb-sub">ЧПУ-оператор</div></div><div class="tb-av" id="cnc-av" onclick="logout()"></div></div>
-  <div class="mets"><div class="met mb"><div class="mv" id="cnc-d">0</div><div class="ml">сделал</div></div><div class="met mg"><div class="mv" id="cnc-e">0 ₽</div><div class="ml">заработал</div></div><div class="met mr"><div class="mv" id="cnc-b">0</div><div class="ml">брак</div></div></div>
+  <div class="mets"><div class="met mb" onclick="openMyLog()" style="cursor:pointer"><div class="mv" id="cnc-d">0</div><div class="ml">сделал ✎</div></div><div class="met mg"><div class="mv" id="cnc-e">0 ₽</div><div class="ml">заработал</div></div><div class="met mr"><div class="mv" id="cnc-b">0</div><div class="ml">брак</div></div></div>
   <div class="slbl">Выбери стол</div><div class="scroll"><div class="tiles" id="cnc-tiles"></div></div>
 </div>
 <div class="screen" id="sc-carp">
   <div class="topbar"><div><div class="tb-title" id="carp-name">Михаил</div><div class="tb-sub">Столяр</div></div><div class="tb-av" id="carp-av" onclick="logout()"></div></div>
-  <div class="mets" style="grid-template-columns:1fr 1fr"><div class="met mb"><div class="mv" id="carp-d">0</div><div class="ml">сделал</div></div><div class="met mg"><div class="mv" id="carp-e">0 ₽</div><div class="ml">заработал</div></div></div>
+  <div class="mets" style="grid-template-columns:1fr 1fr"><div class="met mb" onclick="openMyLog()" style="cursor:pointer"><div class="mv" id="carp-d">0</div><div class="ml">сделал ✎</div></div><div class="met mg"><div class="mv" id="carp-e">0 ₽</div><div class="ml">заработал</div></div></div>
   <div class="slbl">Задачи</div><div class="scroll"><div class="tiles" id="carp-tiles"></div></div>
 </div>
 <div class="screen" id="sc-work">
   <div class="topbar"><div><div class="tb-title" id="work-name">Сергей</div><div class="tb-sub" id="work-role">Шлифовщик</div></div><div class="tb-av" id="work-av" onclick="logout()"></div></div>
-  <div class="mets" style="grid-template-columns:1fr 1fr"><div class="met mb"><div class="mv" id="work-d">0</div><div class="ml">сделал</div></div><div class="met mg"><div class="mv" id="work-e">0 ₽</div><div class="ml">заработал</div></div></div>
+  <div class="mets" style="grid-template-columns:1fr 1fr"><div class="met mb" onclick="openMyLog()" style="cursor:pointer"><div class="mv" id="work-d">0</div><div class="ml">сделал ✎</div></div><div class="met mg"><div class="mv" id="work-e">0 ₽</div><div class="ml">заработал</div></div></div>
   <div class="slbl">Этапы</div><div class="scroll"><div id="brak-alerts" style="display:none;margin:0 16px 8px"></div><div class="tiles" id="work-tiles"></div></div>
 </div>
 <div class="screen" id="sc-admin">
@@ -198,7 +198,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
 
 <div class="screen" id="sc-pack">
   <div class="topbar"><div><div class="tb-title" id="pack-name">Дмитрий</div><div class="tb-sub">Упаковщик</div></div><div class="tb-av" id="pack-av" onclick="logout()"></div></div>
-  <div class="mets"><div class="met mb"><div class="mv" id="pack-d">0</div><div class="ml">упаковал</div></div><div class="met mg"><div class="mv" id="pack-e">0 ₽</div><div class="ml">заработал</div></div><div class="met" style="background:#EEEDFE"><div class="mv" id="pack-s" style="color:#534AB7">0</div><div class="ml" style="color:#7F77DD">на склад</div></div></div>
+  <div class="mets"><div class="met mb" onclick="openMyLog()" style="cursor:pointer"><div class="mv" id="pack-d">0</div><div class="ml">упаковал ✎</div></div><div class="met mg"><div class="mv" id="pack-e">0 ₽</div><div class="ml">заработал</div></div><div class="met" style="background:#EEEDFE"><div class="mv" id="pack-s" style="color:#534AB7">0</div><div class="ml" style="color:#7F77DD">на склад</div></div></div>
   <div class="slbl">Выбери изделие</div><div class="scroll"><div class="tiles" id="pack-tiles"></div><button onclick="openOv('ov-brak')" style="margin:0 16px 16px;width:calc(100% - 32px);padding:14px;background:#FCEBEB;color:#A32D2D;border:1.5px solid #F09595;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">&#9888; Отметить брак</button></div>
 </div>
 
@@ -276,7 +276,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
     <button class="btn-cancel" onclick="closeOv()">Отмена</button>
   </div>
 </div>
-<div class="overlay" id="ov-etask" onclick="ovBg(event,'ov-etask')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" id="etask-heading">Редактировать задачу</div><div class="sh-sub" id="etask-sub">Измени данные или удали этап</div></div><div class="field"><div class="field-lbl">Название задачи</div><input id="et-nm" placeholder="Название" autocomplete="off"></div><div class="field"><div class="field-lbl">Ставка ₽ за 1 штуку</div><input id="et-rate" type="number" inputmode="numeric" placeholder="50" autocomplete="off"></div><div id="et-yld-field" style="display:none"><div class="field"><div class="field-lbl">Выход с листа (штук)</div><div class="stpr-yld"><button onclick="etYld(-1)">&#8722;</button><span id="et-yld">4</span><button onclick="etYld(1)">+</button></div></div></div><div class="field"><div class="field-lbl">Иконка</div><div class="ico-grid" id="et-icos"></div></div><button class="btn-primary" onclick="etSave()">&#10003; Сохранить изменения</button><button class="btn-primary" style="background:#FCEBEB;color:#A32D2D" onclick="etDelete()">&#128465; Удалить этот этап</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-addtask" onclick="ovBg(event,'ov-addtask')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title">Новая задача</div><div class="sh-sub" id="addtask-sub">Заполни — появится на экране</div></div><div class="field"><div class="field-lbl">Название</div><input id="at-nm" placeholder="Название задачи" autocomplete="off"></div><div class="field"><div class="field-lbl">Ставка ₽ за 1 штуку</div><input id="at-rate" type="number" inputmode="numeric" placeholder="50" autocomplete="off"></div><div id="at-yld-field" style="display:none"><div class="field"><div class="field-lbl">Выход с листа (штук)</div><div class="stpr-yld"><button onclick="atYld(-1)">&#8722;</button><span id="at-yld">4</span><button onclick="atYld(1)">+</button></div></div></div><div class="field"><div class="field-lbl">Иконка</div><div class="ico-grid" id="at-icos"></div></div><button class="btn-primary btn-green" onclick="atSave()">Добавить задачу</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-brak" onclick="ovBg(event,'ov-brak')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" style="color:#A32D2D">&#9888; Отметить брак</div><div class="sh-sub">Укажи изделие и количество брака. Маляр получит оповещение.</div></div><div class="field"><div class="field-lbl">Изделие</div><input id="bk-nm" placeholder="Название изделия" autocomplete="off"></div><div class="field"><div class="field-lbl">Количество бракованных</div><div class="stpr-yld"><button onclick="bkChg(-1)">&#8722;</button><span id="bk-qty">1</span><button onclick="bkChg(1)">+</button></div></div><div class="field"><div class="field-lbl">Причина (необязательно)</div><input id="bk-reason" placeholder="Например: царапина, скол..." autocomplete="off"></div><button class="btn-primary" style="background:#A32D2D" onclick="bkSave()">Отправить в брак</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-newrole" onclick="ovBg(event,'ov-newrole')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title">Новая специальность</div><div class="sh-sub">Например: Маляр 2, Сборщик, Резчик...</div></div><div class="field"><div class="field-lbl">Название специальности</div><input id="nr-nm" placeholder="Например: Маляр 3" autocomplete="off"></div><div class="field"><div class="field-lbl">Иконка (эмодзи)</div><div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px" id="nr-icos"><div class="ico-opt sel" onclick="nrIco(0)">🎨</div><div class="ico-opt" onclick="nrIco(1)">🔨</div><div class="ico-opt" onclick="nrIco(2)">✂️</div><div class="ico-opt" onclick="nrIco(3)">📦</div><div class="ico-opt" onclick="nrIco(4)">🪛</div><div class="ico-opt" onclick="nrIco(5)">🧱</div><div class="ico-opt" onclick="nrIco(6)">🪚</div><div class="ico-opt" onclick="nrIco(7)">🔧</div><div class="ico-opt" onclick="nrIco(8)">🧹</div><div class="ico-opt" onclick="nrIco(9)">⚙️</div><div class="ico-opt" onclick="nrIco(10)">🖌️</div><div class="ico-opt" onclick="nrIco(11)">🪤</div></div></div><div style="background:var(--bg);border-radius:var(--rs);padding:12px 14px;margin-bottom:14px"><div style="font-size:11px;color:var(--sub);margin-bottom:4px">После создания:</div><div style="font-size:12px;color:var(--text)">&#10003; Появится в списке при добавлении сотрудника</div><div style="font-size:12px;color:var(--text);margin-top:3px">&#10003; Появится вкладкой в управлении задачами</div><div style="font-size:12px;color:var(--text);margin-top:3px">&#10003; Ты сам добавишь задачи для этой специальности</div></div><button class="btn-primary" style="background:var(--amber)" onclick="saveNewRole()">Создать специальность</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="toast-wrap" id="tw" style="display:none"><div class="toast" id="t-el"><div class="toast-dot" id="t-dot"></div><div class="toast-txt" id="t-txt"></div></div></div>
+<div class="overlay" id="ov-etask" onclick="ovBg(event,'ov-etask')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" id="etask-heading">Редактировать задачу</div><div class="sh-sub" id="etask-sub">Измени данные или удали этап</div></div><div class="field"><div class="field-lbl">Название задачи</div><input id="et-nm" placeholder="Название" autocomplete="off"></div><div class="field"><div class="field-lbl">Ставка ₽ за 1 штуку</div><input id="et-rate" type="number" inputmode="numeric" placeholder="50" autocomplete="off"></div><div id="et-yld-field" style="display:none"><div class="field"><div class="field-lbl">Выход с листа (штук)</div><div class="stpr-yld"><button onclick="etYld(-1)">&#8722;</button><span id="et-yld">4</span><button onclick="etYld(1)">+</button></div></div></div><div class="field"><div class="field-lbl">Иконка</div><div class="ico-grid" id="et-icos"></div></div><button class="btn-primary" onclick="etSave()">&#10003; Сохранить изменения</button><button class="btn-primary" style="background:#FCEBEB;color:#A32D2D" onclick="etDelete()">&#128465; Удалить этот этап</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-addtask" onclick="ovBg(event,'ov-addtask')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title">Новая задача</div><div class="sh-sub" id="addtask-sub">Заполни — появится на экране</div></div><div class="field"><div class="field-lbl">Название</div><input id="at-nm" placeholder="Название задачи" autocomplete="off"></div><div class="field"><div class="field-lbl">Ставка ₽ за 1 штуку</div><input id="at-rate" type="number" inputmode="numeric" placeholder="50" autocomplete="off"></div><div id="at-yld-field" style="display:none"><div class="field"><div class="field-lbl">Выход с листа (штук)</div><div class="stpr-yld"><button onclick="atYld(-1)">&#8722;</button><span id="at-yld">4</span><button onclick="atYld(1)">+</button></div></div></div><div class="field"><div class="field-lbl">Иконка</div><div class="ico-grid" id="at-icos"></div></div><button class="btn-primary btn-green" onclick="atSave()">Добавить задачу</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-brak" onclick="ovBg(event,'ov-brak')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" style="color:#A32D2D">&#9888; Отметить брак</div><div class="sh-sub">Укажи изделие и количество брака. Маляр получит оповещение.</div></div><div class="field"><div class="field-lbl">Изделие</div><input id="bk-nm" placeholder="Название изделия" autocomplete="off"></div><div class="field"><div class="field-lbl">Количество бракованных</div><div class="stpr-yld"><button onclick="bkChg(-1)">&#8722;</button><span id="bk-qty">1</span><button onclick="bkChg(1)">+</button></div></div><div class="field"><div class="field-lbl">Причина (необязательно)</div><input id="bk-reason" placeholder="Например: царапина, скол..." autocomplete="off"></div><button class="btn-primary" style="background:#A32D2D" onclick="bkSave()">Отправить в брак</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-newrole" onclick="ovBg(event,'ov-newrole')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title">Новая специальность</div><div class="sh-sub">Например: Маляр 2, Сборщик, Резчик...</div></div><div class="field"><div class="field-lbl">Название специальности</div><input id="nr-nm" placeholder="Например: Маляр 3" autocomplete="off"></div><div class="field"><div class="field-lbl">Иконка (эмодзи)</div><div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px" id="nr-icos"><div class="ico-opt sel" onclick="nrIco(0)">🎨</div><div class="ico-opt" onclick="nrIco(1)">🔨</div><div class="ico-opt" onclick="nrIco(2)">✂️</div><div class="ico-opt" onclick="nrIco(3)">📦</div><div class="ico-opt" onclick="nrIco(4)">🪛</div><div class="ico-opt" onclick="nrIco(5)">🧱</div><div class="ico-opt" onclick="nrIco(6)">🪚</div><div class="ico-opt" onclick="nrIco(7)">🔧</div><div class="ico-opt" onclick="nrIco(8)">🧹</div><div class="ico-opt" onclick="nrIco(9)">⚙️</div><div class="ico-opt" onclick="nrIco(10)">🖌️</div><div class="ico-opt" onclick="nrIco(11)">🪤</div></div></div><div style="background:var(--bg);border-radius:var(--rs);padding:12px 14px;margin-bottom:14px"><div style="font-size:11px;color:var(--sub);margin-bottom:4px">После создания:</div><div style="font-size:12px;color:var(--text)">&#10003; Появится в списке при добавлении сотрудника</div><div style="font-size:12px;color:var(--text);margin-top:3px">&#10003; Появится вкладкой в управлении задачами</div><div style="font-size:12px;color:var(--text);margin-top:3px">&#10003; Ты сам добавишь задачи для этой специальности</div></div><button class="btn-primary" style="background:var(--amber)" onclick="saveNewRole()">Создать специальность</button><button class="btn-cancel" onclick="closeOv()">Отмена</button></div></div><div class="overlay" id="ov-mylog" onclick="ovBg(event,'ov-mylog')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title">Мои операции сегодня</div><div class="sh-sub">Нажми на запись чтобы исправить</div></div><div id="mylog-list" style="margin-bottom:14px"></div><button class="btn-cancel" onclick="closeOv()">Закрыть</button></div></div><div class="overlay" id="ov-fixop" onclick="ovBg(event,'ov-fixop')"><div class="sheet"><div class="sheet-top"><div class="sheet-handle"></div><div class="sh-title" id="fixop-title">Исправить запись</div><div class="sh-sub" id="fixop-sub">Измени количество</div></div><div style="background:var(--bg);border-radius:var(--rs);padding:14px;margin-bottom:14px;text-align:center"><div style="font-size:13px;color:var(--sub);margin-bottom:10px">Было записано</div><div style="font-size:32px;font-weight:700;color:var(--text)" id="fixop-old">0 шт</div></div><div class="row-lbl">Исправить на</div><div class="pill-row pill-g" style="margin-bottom:14px"><div class="pill-nm pill-nm-g">Новое количество</div><div class="stpr"><button class="stbtn sg" onclick="fixC(-1)">−</button><span class="sv sv-g" id="fixop-q">1</span><button class="stbtn sg" onclick="fixC(1)">+</button></div></div><div style="font-size:13px;color:var(--sub);text-align:center;margin-bottom:14px" id="fixop-earn"></div><button class="btn-primary" onclick="fixSave()">Сохранить исправление</button><button class="btn-primary" style="background:#FCEBEB;color:#A32D2D" onclick="fixDelete()">Удалить эту запись</button><button class="btn-cancel" onclick="backToLog()">Назад</button></div></div><div class="toast-wrap" id="tw" style="display:none"><div class="toast" id="t-el"><div class="toast-dot" id="t-dot"></div><div class="toast-txt" id="t-txt"></div></div></div>
 </div>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -799,6 +799,122 @@ function loadCustomRoles(cb){
     });
     if(cb) cb();
   }).catch(function(){ if(cb) cb(); });
+}
+
+var myLogData = {};  // key -> entry
+var fixKey = '';
+var fixOldPcs = 0;
+var fixRate = 0;
+var fixNewPcs = 1;
+
+function openMyLog(){
+  var list = document.getElementById('mylog-list');
+  list.innerHTML = '<div style="text-align:center;color:var(--ter);font-size:13px;padding:16px">Загрузка...</div>';
+  openOv('ov-mylog');
+  db.ref('ops/'+tdk()+'/'+CU.id+'/entries').once('value').then(function(snap){
+    myLogData = snap.val() || {};
+    renderMyLog();
+  });
+}
+
+function renderMyLog(){
+  var list = document.getElementById('mylog-list');
+  list.innerHTML = '';
+  var keys = Object.keys(myLogData);
+  if(!keys.length){
+    list.innerHTML = '<div style="text-align:center;color:var(--ter);font-size:13px;padding:24px">Операций за сегодня нет</div>';
+    return;
+  }
+  keys.slice().reverse().forEach(function(k){
+    var op = myLogData[k];
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);cursor:pointer';
+    row.innerHTML = '<div style="font-size:22px;flex-shrink:0">'+op.ico+'</div>'
+      +'<div style="flex:1">'
+      +'<div style="font-size:13px;font-weight:500;color:var(--text)">'+op.nm+'</div>'
+      +'<div style="font-size:11px;color:var(--sub);margin-top:2px">'+op.stage+' · '+op.time+'</div>'
+      +'</div>'
+      +'<div style="text-align:right;flex-shrink:0">'
+      +'<div style="font-size:16px;font-weight:700;color:var(--text)">'+op.pcs+' шт</div>'
+      +'<div style="font-size:11px;color:var(--green)">'+fmt(op.earn)+'</div>'
+      +'</div>'
+      +'<div style="font-size:18px;color:var(--blue);flex-shrink:0;padding-left:4px">›</div>';
+    row.onclick = (function(key){ return function(){ openFixOp(key); }; })(k);
+    list.appendChild(row);
+  });
+}
+
+function openFixOp(key){
+  fixKey = key;
+  var op = myLogData[key];
+  fixOldPcs = op.pcs;
+  fixRate = op.earn / (op.pcs || 1);
+  fixNewPcs = op.pcs;
+  sv('fixop-title', op.ico+' '+op.nm);
+  sv('fixop-sub', op.stage+' · '+op.time);
+  sv('fixop-old', op.pcs+' шт');
+  sv('fixop-q', fixNewPcs);
+  updFixEarn();
+  // Скрыть mylog, показать fixop
+  document.getElementById('ov-mylog').style.display = 'none';
+  document.getElementById('ov-fixop').style.display = 'flex';
+}
+
+function fixC(d){ fixNewPcs = Math.max(0, fixNewPcs+d); sv('fixop-q', fixNewPcs); updFixEarn(); }
+
+function updFixEarn(){
+  var newEarn = fixNewPcs * fixRate;
+  var diff = fixNewPcs - fixOldPcs;
+  var diffStr = diff > 0 ? '+'+diff : ''+diff;
+  sv('fixop-earn', fixNewPcs+' шт · '+fmt(newEarn)+(diff!==0?' ('+diffStr+' шт)':''));
+}
+
+function fixSave(){
+  var op = myLogData[fixKey];
+  var oldEarn = op.earn;
+  var newEarn = fixNewPcs * fixRate;
+  var diffPcs = fixNewPcs - fixOldPcs;
+  var diffEarn = newEarn - oldEarn;
+  // Обновить запись
+  db.ref('ops/'+tdk()+'/'+CU.id+'/entries/'+fixKey+'/pcs').set(fixNewPcs);
+  db.ref('ops/'+tdk()+'/'+CU.id+'/entries/'+fixKey+'/earn').set(newEarn);
+  // Обновить сводку
+  db.ref('ops/'+tdk()+'/'+CU.id+'/summary').transaction(function(c){
+    c = c||{p:0,e:0,b:0};
+    c.p += diffPcs;
+    c.e += diffEarn;
+    if(c.p < 0) c.p = 0;
+    if(c.e < 0) c.e = 0;
+    return c;
+  });
+  // Обновить локально
+  myLogData[fixKey].pcs = fixNewPcs;
+  myLogData[fixKey].earn = newEarn;
+  toast('Исправлено: '+fixNewPcs+' шт · '+fmt(newEarn), false);
+  backToLog();
+}
+
+function fixDelete(){
+  var op = myLogData[fixKey];
+  // Убрать из сводки
+  db.ref('ops/'+tdk()+'/'+CU.id+'/summary').transaction(function(c){
+    c = c||{p:0,e:0,b:0};
+    c.p -= op.pcs; c.e -= op.earn;
+    if(c.p < 0) c.p = 0;
+    if(c.e < 0) c.e = 0;
+    return c;
+  });
+  // Удалить запись
+  db.ref('ops/'+tdk()+'/'+CU.id+'/entries/'+fixKey).remove();
+  delete myLogData[fixKey];
+  toast('Запись удалена', false);
+  backToLog();
+}
+
+function backToLog(){
+  document.getElementById('ov-fixop').style.display = 'none';
+  document.getElementById('ov-mylog').style.display = 'flex';
+  renderMyLog();
 }
 function startAdmin(){admDayI=0;admDates=[];for(var i=0;i<30;i++){var d=new Date();d.setDate(d.getDate()-i);admDates.push(d.toISOString().slice(0,10));}renderAdmDay();}
 function admDay(d){admDayI=Math.max(0,Math.min(admDates.length-1,admDayI+d));renderAdmDay();}
