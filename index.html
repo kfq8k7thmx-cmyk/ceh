@@ -176,17 +176,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
   <div id="chain-info" style="display:none;margin:6px 16px 0;background:var(--blue-l);border-radius:var(--rs);padding:8px 12px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:12px;color:var(--blue);font-weight:500" id="chain-lbl">Готово к обработке</div><div style="font-size:18px;font-weight:700;color:var(--blue)" id="chain-cnt">—</div></div><div class="slbl">Этапы</div><div class="scroll"><div id="brak-alerts" style="display:none;margin:0 16px 8px"></div><div class="tiles" id="work-tiles"></div></div>
 </div>
 <div class="screen" id="sc-admin">
-  <div class="topbar"><div><div class="tb-title">Цех — сводка</div><div class="tb-sub">Администратор</div></div><div class="tb-av" onclick="logout()" style="background:#FAEEDA;color:#633806;font-size:16px">👤</div></div>
-  <div class="date-nav">
-    <button class="dn-btn" onclick="admDay(-1)">‹</button>
-    <div><div class="dn-lbl" id="adm-dlbl">Сегодня</div><div class="dn-sub" id="adm-dsub"></div></div>
-    <button class="dn-btn" onclick="admDay(1)">›</button>
+  <div class="topbar" style="padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 12px"><div><div style="font-size:11px;color:var(--ter)" id="adm-date-lbl">Понедельник</div><div class="tb-title">Цех</div></div><div class="tb-av" onclick="logout()" style="background:#FAEEDA;color:#633806;font-size:15px">👤</div></div>
+  <div class="date-nav"><button class="dn-btn" onclick="admDay(-1)">&#8249;</button><div><div class="dn-lbl" id="adm-dlbl">Сегодня</div><div class="dn-sub" id="adm-dsub"></div></div><button class="dn-btn" onclick="admDay(1)">&#8250;</button></div>
+  <div id="adm-alerts"></div>
+  <div class="scroll">
+  <div class="slbl">Команда</div>
+  <div style="margin:0 16px 12px;border-radius:var(--r);border:0.5px solid var(--border);overflow:hidden;background:var(--card)" id="adm-workers"></div>
+  <div class="slbl">Разделы</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 16px">
+    <div onclick="goTab()" style="padding:14px 12px;border-radius:var(--r);border:0.5px solid var(--border);background:var(--card);cursor:pointer"><div style="font-size:20px;margin-bottom:6px">&#128203;</div><div style="font-size:13px;font-weight:500;color:var(--text)">Табель</div><div style="font-size:11px;color:var(--sub);margin-top:2px">зарплата · выплаты</div></div>
+    <div onclick="goStock()" style="padding:14px 12px;border-radius:var(--r);border:0.5px solid var(--border);background:var(--card);cursor:pointer"><div style="font-size:20px;margin-bottom:6px">&#128230;</div><div style="font-size:13px;font-weight:500;color:var(--text)">Склад</div><div style="font-size:11px;color:var(--sub);margin-top:2px">готовая продукция</div></div>
+    <div onclick="goMdf()" style="padding:14px 12px;border-radius:var(--r);border:0.5px solid var(--border);background:var(--card);cursor:pointer" id="mdf-nav-btn"><div style="font-size:20px;margin-bottom:6px">&#129683;</div><div style="font-size:13px;font-weight:500;color:var(--text)">МДФ</div><div style="font-size:11px;color:var(--sub);margin-top:2px" id="mdf-nav-sub">листы · расход</div></div>
+    <div onclick="goStaff()" style="padding:14px 12px;border-radius:var(--r);border:0.5px solid var(--border);background:var(--card);cursor:pointer"><div style="font-size:20px;margin-bottom:6px">&#9881;&#65039;</div><div style="font-size:13px;font-weight:500;color:var(--text)">Настройки</div><div style="font-size:11px;color:var(--sub);margin-top:2px">люди · задачи · роли</div></div>
   </div>
-  <div class="mets"><div class="met mb"><div class="mv" id="adm-p">0</div><div class="ml">изделий</div></div><div class="met mg"><div class="mv" id="adm-e">0 ₽</div><div class="ml">к выплате</div></div><div class="met mr"><div class="mv" id="adm-b">0</div><div class="ml">брак</div></div></div>
-  <div class="scroll"><div id="adm-alerts"></div><div class="slbl">Работники — нажми для деталей</div><div id="adm-workers"></div><button class="tabel-open-btn" onclick="goTab()">📋 Табель за месяц</button>
-<button class="tabel-open-btn" style="background:#EEEDFE;color:#534AB7" onclick="goStaff()">👤 Управление сотрудниками</button>
-<button class="tabel-open-btn" style="background:#EAF3DE;color:#3B6D11" onclick="goStock()">📦 Склад готовой продукции</button>
-<button class="tabel-open-btn" style="background:#FAEEDA;color:#633806" onclick="goMdf()">🪵 Склад МДФ</button></div>
+  <div style="height:8px"></div>
+  </div>
 </div>
 <div class="screen" id="sc-tab">
   <div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-admin')">‹</div><div style="flex:1"><div class="tb-title">Табель — <span id="tab-month-lbl"></span></div><div class="tb-sub">нажми работника — по дням</div></div></div>
@@ -1391,44 +1395,108 @@ function wbbSave(){
 function startAdmin(){admDayI=0;admDates=[];for(var i=0;i<30;i++){var d=new Date();d.setDate(d.getDate()-i);admDates.push(d.toISOString().slice(0,10));}renderAdmDay();}
 function admDay(d){admDayI=Math.max(0,Math.min(admDates.length-1,admDayI+d));renderAdmDay();}
 function renderAdmDay(){
-  var dk=admDates[admDayI];var dayObj=new Date(dk+'T12:00:00');
-  var lbl=admDayI===0?'Сегодня':admDayI===1?'Вчера':dayObj.toLocaleDateString('ru',{day:'numeric',month:'long'});
-  sv('adm-dlbl',lbl);sv('adm-dsub',dayObj.toLocaleDateString('ru',{day:'numeric',month:'long',year:'numeric'}));
+  var dk=admDates[admDayI];
+  var dayObj=new Date(dk+'T12:00:00');
+  var labels=['Сегодня','Вчера'];
+  var lbl=admDayI<2?labels[admDayI]:dayObj.toLocaleDateString('ru',{day:'numeric',month:'long'});
+  sv('adm-dlbl',lbl);
+  sv('adm-dsub',dayObj.toLocaleDateString('ru',{day:'numeric',month:'long',year:'numeric'}));
+  // Обновить дату в топбаре
+  var days=['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
+  if(document.getElementById('adm-date-lbl')) sv('adm-date-lbl', days[dayObj.getDay()]);
+
   var workers=USERS.filter(function(u){return u.role!=='admin';});
+  var clrs=['#378ADD','#1D9E75','#EF9F27','#D85A30','#7F77DD','#E24B4A','#639922'];
+
   db.ref('ops/'+dk).once('value').then(function(snap){
-    var opsData=snap.val()||{};var tp=0,te=0,tb=0;
-    workers.forEach(function(u){var s=(opsData[u.id]&&opsData[u.id].summary)||{p:0,e:0,b:0};tp+=s.p||0;te+=s.e||0;tb+=s.b||0;});
-    sv('adm-p',tp);sv('adm-e',fmt(te));sv('adm-b',tb);
-    var al=document.getElementById('adm-alerts');al.innerHTML='';
-    if(tb>3){var a=document.createElement('div');a.className='alert';a.innerHTML='<div class="alert-t">⚠️ Много брака — '+tb+' шт</div>';al.appendChild(a);}
-    var cont=document.getElementById('adm-workers');cont.innerHTML='';
-    var clrs=['#378ADD','#1D9E75','#EF9F27','#D85A30','#7F77DD'];
+    var opsData=snap.val()||{};
+
+    // Алерт брака
+    var tb=0;
+    workers.forEach(function(u){var s=(opsData[u.id]&&opsData[u.id].summary)||{b:0};tb+=s.b||0;});
+    var al=document.getElementById('adm-alerts'); al.innerHTML='';
+    if(tb>3){var a=document.createElement('div');a.className='alert';a.innerHTML='<div class="alert-t">&#9888;&#65039; Много брака сегодня — '+tb+' шт</div>';al.appendChild(a);}
+
+    // Обновить кнопку МДФ если мало
+    db.ref('mdf/stock').once('value').then(function(msnap){
+      var mdata=msnap.val()||{};
+      var totalMdf=0;
+      Object.values(mdata).forEach(function(v){totalMdf+=v||0;});
+      var mdfBtn=document.getElementById('mdf-nav-btn');
+      var mdfSub=document.getElementById('mdf-nav-sub');
+      if(mdfBtn&&totalMdf<=3){
+        mdfBtn.style.background='#FCEBEB';
+        mdfBtn.style.borderColor='#F09595';
+        if(mdfSub){mdfSub.style.color='#E24B4A';mdfSub.textContent='⚠ мало — '+totalMdf+' листов';}
+      } else if(mdfSub){
+        mdfSub.textContent=totalMdf ? totalMdf+' листов' : 'листы · расход';
+      }
+    }).catch(function(){});
+
+    // Карточки команды
+    var cont=document.getElementById('adm-workers'); cont.innerHTML='';
     workers.forEach(function(u,i){
-      var sum=(opsData[u.id]&&opsData[u.id].summary)||{p:0,e:0,b:0};
-      var entries=opsData[u.id]&&opsData[u.id].entries?Object.values(opsData[u.id].entries):[];
+      var d=(opsData[u.id]&&opsData[u.id].summary)||{p:0,e:0,b:0};
       var isOpen=false;
-      var card=document.createElement('div');card.className='wcard';
-      var head=document.createElement('div');head.className='wc-head';
-      head.innerHTML='<div class="dot '+(sum.p>0?'dot-g':'dot-gr')+'"></div><div class="wc-av" style="'+u.avS+'">'+u.init+'</div><div class="wc-info"><div class="wc-nm">'+u.name+'</div><div class="wc-role">'+ROLE[u.role]+'</div></div><div class="wc-right"><div class="wc-pcs">'+(sum.p||0)+' шт</div><div class="wc-earn">'+fmt(sum.e||0)+'</div>'+(sum.b>0?'<div class="wc-brak">брак: '+sum.b+'</div>':'')+'</div><div class="wc-arr" id="aa'+i+'">▾</div>';
-      var pw=document.createElement('div');pw.className='prog-wrap';pw.innerHTML='<div class="prog" style="width:'+Math.min(100,(sum.p||0)*3)+'%;background:'+clrs[i]+'"></div>';
-      var det=document.createElement('div');det.style.display='none';
-      var opsHtml='<div class="ops-list">';
-      if(entries.length===0){opsHtml+='<div class="ops-empty">Операций за этот день нет</div>';}
-      else{
-        opsHtml+='<div class="ops-header"><span>Изделие / этап</span><span>Кол-во · сумма</span></div>';
+      var wrap=document.createElement('div');
+      wrap.style.cssText='border-bottom:0.5px solid var(--border)';
+
+      var head=document.createElement('div');
+      head.style.cssText='display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer';
+      var dotCls=(d.p>0)?'dot-g':'dot-gr';
+      head.innerHTML='<div class="dot '+dotCls+'"></div>'
+        +'<div class="wc-av" style="'+u.avS+'">'+u.init+'</div>'
+        +'<div style="flex:1">'
+        +'<div style="font-size:12px;font-weight:500;color:var(--text)">'+u.name+'</div>'
+        +'<div style="font-size:10px;color:var(--sub);margin-top:1px">'+ROLE[u.role]+'</div>'
+        +'<div style="height:2px;background:var(--border);border-radius:1px;margin-top:4px;overflow:hidden">'
+        +'<div style="height:2px;border-radius:1px;width:'+Math.min(100,(d.p||0)*3)+'%;background:'+clrs[i%clrs.length]+'"></div>'
+        +'</div></div>'
+        +'<div style="text-align:right;flex-shrink:0">'
+        +'<div style="font-size:13px;font-weight:500;color:var(--text)">'+(d.p||0)+' шт</div>'
+        +'<div style="font-size:10px;color:#1D9E75;margin-top:1px">'+fmt(d.e||0)+'</div>'
+        +(d.b>0?'<div style="font-size:10px;color:#E24B4A">брак: '+d.b+'</div>':'')
+        +'</div>'
+        +'<div class="wc-arr" id="aa'+i+'">&#9662;</div>';
+
+      // Детализация
+      var entries=(opsData[u.id]&&opsData[u.id].entries)?Object.values(opsData[u.id].entries):[];
+      var det=document.createElement('div');
+      det.style.display='none';
+      var opsHtml='<div style="padding:0 14px">';
+      if(!entries.length){
+        opsHtml+='<div style="padding:10px 0;font-size:12px;color:var(--ter);text-align:center">Нет операций</div>';
+      } else {
         entries.slice().reverse().forEach(function(op){
-          opsHtml+='<div class="op-row"><div class="op-ico">'+op.ico+'</div><div class="op-info"><div class="op-nm">'+op.nm+'</div><div class="op-stage">'+op.stage+'</div></div><div class="op-right"><div class="op-pcs">'+op.pcs+' шт</div><div class="op-earn">'+fmt(op.earn)+'</div>'+(op.brak>0?'<div class="op-brak">брак: '+op.brak+'</div>':'')+'<div class="op-time">'+op.time+'</div></div></div>';
+          opsHtml+='<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid var(--border)">'
+            +'<div style="font-size:18px">'+op.ico+'</div>'
+            +'<div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text)">'+op.nm+'</div>'
+            +'<div style="font-size:10px;color:var(--sub)">'+op.stage+' · '+op.time+'</div></div>'
+            +'<div style="text-align:right"><div style="font-size:13px;font-weight:500;color:var(--text)">'+op.pcs+' шт</div>'
+            +'<div style="font-size:10px;color:#1D9E75">'+fmt(op.earn)+'</div>'
+            +(op.brak>0?'<div style="font-size:10px;color:#E24B4A">брак: '+op.brak+'</div>':'')
+            +'</div></div>';
         });
       }
       opsHtml+='</div>';
-      if(u.id==='dima'){var stockVal=(opsData[u.id]&&opsData[u.id].stock)||0;opsHtml+='<div style="margin:6px 14px 2px;background:#EEEDFE;border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:12px;font-weight:600;color:#534AB7">Отправлено на склад</div><div style="font-size:10px;color:#7F77DD;margin-top:2px">за '+lbl.toLowerCase()+'</div></div><div style="font-size:18px;font-weight:700;color:#534AB7">'+stockVal+' шт</div></div>';}
-      opsHtml+='<div class="pay-box"><div><div class="pay-lbl">Заплатить '+u.name+'</div><div class="pay-sub">за '+lbl.toLowerCase()+'</div></div><div class="pay-val">'+fmt(sum.e||0)+'</div></div>';
+      opsHtml+='<div style="margin:8px 14px 12px;background:#E1F5EE;border-radius:var(--rs);padding:10px 12px;display:flex;justify-content:space-between;align-items:center">'
+        +'<div><div style="font-size:12px;font-weight:500;color:#085041">Заплатить '+u.name+'</div>'
+        +'<div style="font-size:10px;color:#1D9E75;margin-top:1px">'+lbl+'</div></div>'
+        +'<div style="font-size:16px;font-weight:500;color:#085041">'+fmt(d.e||0)+'</div></div>';
       det.innerHTML=opsHtml;
-      head.onclick=function(){isOpen=!isOpen;det.style.display=isOpen?'block':'none';head.classList.toggle('exp',isOpen);document.getElementById('aa'+i).className='wc-arr'+(isOpen?' open':'');};
-      card.appendChild(head);card.appendChild(pw);card.appendChild(det);cont.appendChild(card);
+
+      head.onclick=function(){
+        isOpen=!isOpen;det.style.display=isOpen?'block':'none';
+        document.getElementById('aa'+i).className='wc-arr'+(isOpen?' open':'');
+      };
+      wrap.appendChild(head); wrap.appendChild(det);
+      // Убрать border у последнего
+      if(i===workers.length-1) wrap.style.borderBottom='none';
+      cont.appendChild(wrap);
     });
   });
 }
+
 function goTab(){
   var now=new Date();sv('tab-month-lbl',now.toLocaleDateString('ru',{month:'long',year:'numeric'}));
   var mp=now.toISOString().slice(0,7);var workers=USERS.filter(function(u){return u.role!=='admin';});
