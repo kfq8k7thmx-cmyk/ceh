@@ -1709,37 +1709,190 @@ function renderAdmDay(){
 }
 
 function goTab(){
-  var now=new Date();sv('tab-month-lbl',now.toLocaleDateString('ru',{month:'long',year:'numeric'}));
-  var mp=now.toISOString().slice(0,7);var workers=USERS.filter(function(u){return u.role!=='admin';});
+  var now=new Date();
+  sv('tab-month-lbl',now.toLocaleDateString('ru',{month:'long',year:'numeric'}));
+  var mp=now.toISOString().slice(0,7);
+  var workers=USERS.filter(function(u){return u.role!=='admin';});
+
   db.ref('ops').once('value').then(function(snap){
-    var allOps=snap.val()||{};var mt={};
-    workers.forEach(function(u){mt[u.id]={p:0,e:0,b:0,days:{}};});
-    Object.keys(allOps).forEach(function(dk){if(dk.startsWith(mp)){workers.forEach(function(u){var s=allOps[dk][u.id]&&allOps[dk][u.id].summary;if(s){mt[u.id].p+=s.p||0;mt[u.id].e+=s.e||0;mt[u.id].b+=s.b||0;mt[u.id].days[dk]=s;}});}});
+    var allOps=snap.val()||{};
+    var mt={};
+    workers.forEach(function(u){ mt[u.id]={p:0,e:0,b:0,days:{}}; });
+    Object.keys(allOps).forEach(function(dk){
+      if(dk.startsWith(mp)){
+        workers.forEach(function(u){
+          var s=allOps[dk][u.id]&&allOps[dk][u.id].summary;
+          if(s){ mt[u.id].p+=s.p||0; mt[u.id].e+=s.e||0; mt[u.id].b+=s.b||0; mt[u.id].days[dk]=s; }
+        });
+      }
+    });
+
     db.ref('paid/'+mp).once('value').then(function(ps){
-      paidData=ps.val()||{};var tot=0,pai=0;
-      workers.forEach(function(u){tot+=mt[u.id].e;if(paidData[u.id])pai+=mt[u.id].e;});
-      sv('tab-tot',fmt(tot));sv('tab-paid2',fmt(pai));sv('tab-debt','долг: '+fmt(tot-pai));
-      var cont=document.getElementById('tab-workers');cont.innerHTML='';
-      workers.forEach(function(u,i){
-        var m=mt[u.id];var dc=Object.keys(m.days).length;var isPaid=!!paidData[u.id];var isOpen=false;
-        var card=document.createElement('div');card.className='wt-card';
-        var head=document.createElement('div');head.className='wt-head';
-        head.innerHTML='<div class="wc-av" style="'+u.avS+'">'+u.init+'</div><div class="wt-info"><div class="wt-nm">'+u.name+'</div><div class="wt-days">'+dc+' дней · '+m.p+' изд.</div></div><div class="wt-right"><div class="wt-earn">'+fmt(m.e)+'</div>'+(m.b>0?'<div style="font-size:11px;color:var(--sub)">брак '+m.b+' шт</div>':'')+'<div class="wt-badge '+(isPaid?'wb-yes':'wb-no')+'" id="twb'+i+'">'+(isPaid?'выплачено':'не выплачено')+'</div></div><div class="wc-arr" id="ta'+i+'">▾</div>';
-        var det=document.createElement('div');det.style.display='none';
-        var dr='<div class="wt-det">';
-        Object.keys(m.days).sort().reverse().forEach(function(dk){var dd=m.days[dk];var dl=new Date(dk+'T12:00:00').toLocaleDateString('ru',{day:'numeric',month:'short'});dr+='<div class="wt-day"><span class="wt-day-lbl">'+dl+'</span><span class="wt-day-pcs">'+(dd.p||0)+' шт</span><span class="wt-day-earn">'+fmt(dd.e||0)+'</span></div>';});
-        if(!Object.keys(m.days).length)dr+='<div class="wt-day"><span class="wt-day-lbl">Нет операций</span></div>';
-        dr+='</div>';det.innerHTML=dr;
-        var btn=document.createElement('button');btn.className='mark-btn'+(isPaid?' done':'');btn.textContent=isPaid?'✓ Выплачено':'Отметить — выплачено';
-        var uid=u.id;var bi=i;
-        btn.onclick=function(e){e.stopPropagation();db.ref('paid/'+mp+'/'+uid).set(true).then(function(){paidData[uid]=true;btn.className='mark-btn done';btn.textContent='✓ Выплачено';document.getElementById('twb'+bi).className='wt-badge wb-yes';document.getElementById('twb'+bi).textContent='выплачено';});};
-        head.onclick=function(){isOpen=!isOpen;det.style.display=isOpen?'block':'none';head.classList.toggle('exp',isOpen);document.getElementById('ta'+i).className='wc-arr'+(isOpen?' open':'');};
-        card.appendChild(head);card.appendChild(det);card.appendChild(btn);cont.appendChild(card);
-      });
+      paidData=ps.val()||{};
+      // paidData[uid] теперь объект с ключами-датами: {uid: {'2026-04-28': true, ...}}
+
+      renderTabWorkers(workers, mt, mp);
       goScreen('sc-tab');
     });
   });
 }
+
+function renderTabWorkers(workers, mt, mp){
+  // Считаем итоги
+  var tot=0, pai=0;
+  workers.forEach(function(u){
+    var m=mt[u.id];
+    var paidDays=paidData[u.id]||{};
+    tot+=m.e;
+    // Считаем только оплаченные дни
+    Object.keys(m.days).forEach(function(dk){
+      if(paidDays[dk]) pai+=m.days[dk].e||0;
+    });
+  });
+  sv('tab-tot',fmt(tot));
+  sv('tab-paid2',fmt(pai));
+  sv('tab-debt','долг: '+fmt(tot-pai));
+
+  var cont=document.getElementById('tab-workers'); cont.innerHTML='';
+  workers.forEach(function(u,i){
+    var m=mt[u.id];
+    var paidDays=paidData[u.id]||{};
+    var dc=Object.keys(m.days).length;
+
+    // Считаем долг по дням
+    var earnPaid=0, earnDebt=0;
+    Object.keys(m.days).forEach(function(dk){
+      if(paidDays[dk]) earnPaid+=m.days[dk].e||0;
+      else earnDebt+=m.days[dk].e||0;
+    });
+
+    var isOpen=false;
+    var selectedDays={};  // выбранные галочками дни
+
+    var card=document.createElement('div'); card.className='wt-card';
+
+    // Шапка
+    var head=document.createElement('div'); head.className='wt-head';
+    head.innerHTML='<div class="wc-av" style="'+u.avS+'">'+u.init+'</div>'
+      +'<div class="wt-info"><div class="wt-nm">'+u.name+'</div>'
+      +'<div class="wt-days">'+dc+' дней · '+m.p+' изд.</div></div>'
+      +'<div class="wt-right">'
+      +'<div class="wt-earn">'+fmt(m.e)+'</div>'
+      +(earnDebt>0?'<div style="font-size:11px;color:#E24B4A;margin-top:1px">долг: '+fmt(earnDebt)+'</div>':'')
+      +(earnPaid>0?'<div style="font-size:10px;color:#1D9E75;margin-top:1px">выплачено: '+fmt(earnPaid)+'</div>':'')
+      +'</div>'
+      +'<div class="wc-arr" id="ta'+i+'">▾</div>';
+
+    // Детализация по дням с галочками
+    var det=document.createElement('div'); det.style.display='none';
+    var detInner=document.createElement('div'); detInner.className='wt-det';
+    detInner.id='det-'+u.id;
+
+    var payBtn=document.createElement('button');
+    payBtn.id='paybtn-'+u.id;
+    payBtn.className='mark-btn';
+    payBtn.style.background='var(--green)';
+    payBtn.textContent='Выплатить выбранные дни';
+
+    function renderDays(){
+      detInner.innerHTML='';
+      var days=Object.keys(m.days).sort().reverse();
+      if(!days.length){
+        detInner.innerHTML='<div style="padding:10px;text-align:center;font-size:12px;color:var(--ter)">Нет данных</div>';
+        return;
+      }
+      days.forEach(function(dk){
+        var dd=m.days[dk];
+        var isPaid=!!paidDays[dk];
+        var isSelected=!!selectedDays[dk];
+        var row=document.createElement('div');
+        row.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:0.5px solid var(--border);cursor:'+(isPaid?'default':'pointer');
+        if(isPaid){
+          row.style.background='#FFF0F0';
+        } else if(isSelected){
+          row.style.background='#E1F5EE';
+        }
+
+        var dl=new Date(dk+'T12:00:00').toLocaleDateString('ru',{day:'numeric',month:'short'});
+
+        if(isPaid){
+          // Оплаченный день — красная метка
+          row.innerHTML='<div style="width:20px;height:20px;border-radius:50%;background:#FCEBEB;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">✓</div>'
+            +'<div style="flex:1"><div style="font-size:12px;color:var(--ter)">'+dl+'</div>'
+            +'<div style="font-size:10px;color:#E24B4A">выплачено</div></div>'
+            +'<div style="text-align:right">'
+            +'<div style="font-size:12px;color:var(--ter)">'+( dd.p||0)+' шт</div>'
+            +'<div style="font-size:11px;color:#E24B4A;text-decoration:line-through">'+fmt(dd.e||0)+'</div>'
+            +'</div>';
+        } else {
+          // Не оплаченный — галочка для выбора
+          var checkEl='<div style="width:20px;height:20px;border-radius:5px;border:2px solid '+(isSelected?'#1D9E75':'var(--border)')+';background:'+(isSelected?'#1D9E75':'white')+';display:flex;align-items:center;justify-content:center;font-size:11px;color:white;flex-shrink:0">'+(isSelected?'✓':'')+'</div>';
+          row.innerHTML=checkEl
+            +'<div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text)">'+dl+'</div></div>'
+            +'<div style="text-align:right">'
+            +'<div style="font-size:12px;font-weight:500;color:var(--text)">'+(dd.p||0)+' шт</div>'
+            +'<div style="font-size:11px;color:#1D9E75;font-weight:500">'+fmt(dd.e||0)+'</div>'
+            +'</div>';
+          row.onclick=(function(dayKey){ return function(){
+            if(selectedDays[dayKey]) delete selectedDays[dayKey];
+            else selectedDays[dayKey]=true;
+            // Обновить сумму кнопки
+            var selTotal=0;
+            Object.keys(selectedDays).forEach(function(sk){ selTotal+=m.days[sk]?m.days[sk].e||0:0; });
+            if(Object.keys(selectedDays).length>0){
+              payBtn.textContent='Выплатить '+Object.keys(selectedDays).length+' дней · '+fmt(selTotal);
+              payBtn.disabled=false; payBtn.style.opacity='1';
+            } else {
+              payBtn.textContent='Выплатить выбранные дни';
+              payBtn.disabled=false; payBtn.style.opacity='0.5';
+            }
+            renderDays();
+          }; })(dk);
+        }
+        detInner.appendChild(row);
+      });
+    }
+    renderDays();
+
+    payBtn.style.opacity='0.5';
+    payBtn.onclick=function(){
+      var selDays=Object.keys(selectedDays);
+      if(!selDays.length) return;
+      var updates={};
+      selDays.forEach(function(dk){ updates[dk]=true; paidDays[dk]=true; });
+      db.ref('paid/'+mp+'/'+u.id).update(updates).then(function(){
+        selDays.forEach(function(dk){ delete selectedDays[dk]; });
+        // Пересчитать
+        var ep=0,ed=0;
+        Object.keys(m.days).forEach(function(dk){
+          if(paidDays[dk]) ep+=m.days[dk].e||0;
+          else ed+=m.days[dk].e||0;
+        });
+        // Обновить шапку
+        head.querySelector('.wt-right').innerHTML='<div class="wt-earn">'+fmt(m.e)+'</div>'
+          +(ed>0?'<div style="font-size:11px;color:#E24B4A;margin-top:1px">долг: '+fmt(ed)+'</div>':'')
+          +(ep>0?'<div style="font-size:10px;color:#1D9E75;margin-top:1px">выплачено: '+fmt(ep)+'</div>':'');
+        payBtn.textContent='Выплатить выбранные дни';
+        payBtn.style.opacity='0.5';
+        renderDays();
+        renderTabWorkers(workers,mt,mp);
+        toast(u.name+' — оплачено', false);
+      });
+    };
+
+    head.onclick=function(){
+      isOpen=!isOpen; det.style.display=isOpen?'block':'none';
+      head.classList.toggle('exp',isOpen);
+      document.getElementById('ta'+i).className='wc-arr'+(isOpen?' open':'');
+    };
+
+    det.appendChild(detInner);
+    det.appendChild(payBtn);
+    card.appendChild(head); card.appendChild(det);
+    cont.appendChild(card);
+  });
+}
+
 function openOv(id){closeOv();document.getElementById(id).style.display='flex';}
 function closeOv(){document.querySelectorAll('.overlay').forEach(function(o){o.style.display='none';});}
 function ovBg(e,id){if(e.target===document.getElementById(id))closeOv();}
