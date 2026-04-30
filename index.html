@@ -530,26 +530,7 @@ function openOp(task){opCtx={q:task.yld||1,b:0,rate:task.rate,uid:CU.id,nm:task.
 function opC(f,d){if(f==='q')opCtx.q=Math.max(0,opCtx.q+d);else opCtx.b=Math.max(0,opCtx.b+d);updOpE();}
 function updOpE(){sv('op-q',opCtx.q);sv('op-b',opCtx.b);var e=opCtx.q*opCtx.rate;sv('op-earn',opCtx.q+' × '+opCtx.rate+' ₽ = '+e+' ₽'+(opCtx.b>0?' · брак: '+opCtx.b:''));}
 function opSave(){
-  // Проверка лимита
-  if(opCtx.dailyLimit && opCtx.dailyLimit > 0){
-    db.ref('ops/'+tdk()+'/'+opCtx.uid+'/summary').once('value').then(function(snap){
-      var cur = (snap.val()||{p:0}).p||0;
-      if(cur + opCtx.q > opCtx.dailyLimit){
-        var remains = opCtx.dailyLimit - cur;
-        if(remains <= 0){
-          toast('Лимит на сегодня выполнен — '+opCtx.dailyLimit+' шт', true);
-          closeOv();
-          return;
-        }
-        opCtx.q = remains;
-        sv('op-q', opCtx.q);
-        toast('Количество уменьшено до лимита: '+remains+' шт', true);
-      }
-      doOpSave();
-    });
-  } else {
-    doOpSave();
-  }
+  doOpSave();
 }
 function doOpSave(){
   var e=opCtx.q*opCtx.rate;
