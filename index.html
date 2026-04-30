@@ -163,7 +163,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
 <div class="screen" id="sc-work">
   <div class="topbar"><div><div class="tb-title" id="work-name">Сергей</div><div class="tb-sub" id="work-role">Шлифовщик</div></div><div class="tb-av" id="work-av" onclick="logout()"></div></div>
   <div class="mets" style="grid-template-columns:1fr 1fr"><div class="met mb" onclick="openMyLog()" style="cursor:pointer"><div class="mv" id="work-d">0</div><div class="ml">сделал ✎</div></div><div class="met mg"><div class="mv" id="work-e">0 ₽</div><div class="ml">заработал</div></div></div>  <button onclick="openMyHistory()" style="margin:6px 16px 0;width:calc(100% - 32px);padding:10px;background:var(--card);border:0.5px solid var(--border);border-radius:var(--rs);font-size:13px;font-weight:500;color:var(--blue);cursor:pointer;display:flex;align-items:center;justify-content:space-between"><span>&#128197; Моя история по дням</span><span style="color:var(--ter)">›</span></button>
-<div class="slbl">Этапы</div><div class="scroll"><div id="brak-alerts" style="display:none;margin:0 16px 8px"></div><div class="tiles" id="work-tiles"></div></div>
+<div class="slbl">Этапы</div><div class="scroll"><div id="wb-brak-alerts"></div><div id="brak-alerts" style="display:none;margin:0 16px 8px"></div><div class="tiles" id="work-tiles"></div></div>
 </div>
 <div class="screen" id="sc-admin">
   <div class="topbar" style="padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 12px"><div><div style="font-size:11px;color:var(--ter)" id="adm-date-lbl">Понедельник</div><div class="tb-title">Цех</div></div><div class="tb-av" onclick="logout()" style="background:#FAEEDA;color:#633806;font-size:15px">👤</div></div>
@@ -1289,15 +1289,23 @@ function wbQtySave(){
     });
     toast(task.nm+' · '+qty+' шт → склад · '+fmt(earn),false);
   } else {
-    // Брак
-    db.ref('ops/'+dk+'/'+CU.id+'/entries').push({nm:task.nm+'(брак WB)',ico:task.ico,stage:'Брак WB',pcs:qty,earn:0,brak:qty,time:ts});
+    // Брак — записать операцию
+    db.ref('ops/'+dk+'/'+CU.id+'/entries').push({nm:task.nm+' (брак WB)',ico:task.ico,stage:'Брак WB',pcs:qty,earn:0,brak:qty,time:ts});
     db.ref('ops/'+dk+'/'+CU.id+'/summary').transaction(function(c){
       c=c||{p:0,e:0,b:0};c.p+=qty;c.b+=qty;return c;
     });
-    toast(task.nm+' · '+qty+' шт — брак списан',false);
+    // Отправить оповещение маляру-водиле
+    db.ref('brak').push({
+      nm:task.nm, qty:qty,
+      reason:'Возврат WB — требует реставрации',
+      from:CU.name, time:ts, date:dk,
+      fixed:false, source:'wb',
+      ico:task.ico
+    });
+    toast(task.nm+' · '+qty+' шт — отправлен маляру на исправление', false);
   }
   closeOv();
-  setTimeout(loadWbHistory,500);
+  setTimeout(loadWbHistory, 500);
 }
 
 function backToWbList(){
