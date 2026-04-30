@@ -533,35 +533,40 @@ function opSave(){
   doOpSave();
 }
 function doOpSave(){
-  var e=opCtx.q*opCtx.rate;
-  var dk=tdk();
-  var now=new Date();
-  var ts=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
-  // Записать операцию
-  db.ref('ops/'+dk+'/'+opCtx.uid+'/entries').push({
-    nm:opCtx.nm,ico:opCtx.ico,stage:opCtx.stage,
-    pcs:opCtx.q,earn:e,brak:opCtx.b,time:ts
-  });
-  // Обновить сводку
-  db.ref('ops/'+dk+'/'+opCtx.uid+'/summary').transaction(function(c){
-    c=c||{p:0,e:0,b:0};
-    c.p+=opCtx.q; c.e+=e; c.b+=opCtx.b;
-    return c;
-  });
-  // Списать МДФ если задача с yld
-  if(opCtx.yld && opCtx.yld>0){
-    deductMdf(opCtx.nm, opCtx.yld, opCtx.q);
-  }
-  // Если упаковщик или wb — на склад
-  if(CU.role==='pack'||CU.role==='wb'){
-    db.ref('stock/'+opCtx.nm).transaction(function(c){
-      c=c||{total:0,lastDate:''};
-      c.total+=opCtx.q; c.lastDate=dk;
-      return c;
+  try {
+    var e=opCtx.q*opCtx.rate;
+    var dk=tdk();
+    var now=new Date();
+    var ts=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
+    toast('Сохраняю...', false);
+    // Записать операцию
+    db.ref('ops/'+dk+'/'+opCtx.uid+'/entries').push({
+      nm:opCtx.nm,ico:opCtx.ico,stage:opCtx.stage||'',
+      pcs:opCtx.q,earn:e,brak:opCtx.b,time:ts
+    }).then(function(){
+      // Обновить сводку
+      return db.ref('ops/'+dk+'/'+opCtx.uid+'/summary').transaction(function(c){
+        c=c||{p:0,e:0,b:0};
+        c.p+=opCtx.q; c.e+=e; c.b+=opCtx.b;
+        return c;
+      });
+    }).then(function(){
+      // Если упаковщик или wb — на склад
+      if(CU.role==='pack'||CU.role==='wb'){
+        db.ref('stock/'+opCtx.nm).transaction(function(c){
+          c=c||{total:0,lastDate:''};
+          c.total+=opCtx.q; c.lastDate=dk;
+          return c;
+        });
+      }
+      toast(opCtx.nm+' · '+opCtx.q+' шт · '+fmt(e), false);
+      closeOv();
+    }).catch(function(err){
+      toast('Ошибка: '+err.message, true);
     });
+  } catch(ex) {
+    toast('Ошибка: '+ex.message, true);
   }
-  toast(opCtx.nm+' · '+opCtx.q+' шт · '+e+' ₽',false);
-  closeOv();
 }
 
 function openAdd(role){addForRole=role;addYldV=4;addIcoIdx=0;document.getElementById('add-nm').value='';document.getElementById('add-rate').value='';sv('add-yld-v',4);sv('add-title',role==='carp'?'Новая задача':(role==='cnc'?'Новый стол':'Новый этап'));document.querySelectorAll('.ico-opt').forEach(function(o,i){o.className='ico-opt'+(i===0?' sel':'');});openOv('ov-add');}
