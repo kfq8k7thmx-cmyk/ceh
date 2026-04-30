@@ -1736,6 +1736,21 @@ function goTab(){
   });
 }
 
+
+function updateTabBanner(workers, mt, mp){
+  var tot=0, pai=0;
+  workers.forEach(function(u){
+    var m=mt[u.id];
+    var pd=paidData[u.id]||{};
+    tot+=m.e;
+    Object.keys(m.days).forEach(function(dk){
+      if(pd[dk]) pai+=m.days[dk].e||0;
+    });
+  });
+  sv('tab-tot',fmt(tot));
+  sv('tab-paid2',fmt(pai));
+  sv('tab-debt','долг: '+fmt(tot-pai));
+}
 function renderTabWorkers(workers, mt, mp){
   // Считаем итоги
   var tot=0, pai=0;
@@ -1861,21 +1876,26 @@ function renderTabWorkers(workers, mt, mp){
       selDays.forEach(function(dk){ updates[dk]=true; paidDays[dk]=true; });
       db.ref('paid/'+mp+'/'+u.id).update(updates).then(function(){
         selDays.forEach(function(dk){ delete selectedDays[dk]; });
-        // Пересчитать
-        var ep=0,ed=0;
+        // Пересчитать долг и выплаченное
+        var ep=0, ed=0;
         Object.keys(m.days).forEach(function(dk){
-          if(paidDays[dk]) ep+=m.days[dk].e||0;
-          else ed+=m.days[dk].e||0;
+          if(paidDays[dk]) ep += m.days[dk].e||0;
+          else ed += m.days[dk].e||0;
         });
-        // Обновить шапку
-        head.querySelector('.wt-right').innerHTML='<div class="wt-earn">'+fmt(m.e)+'</div>'
-          +(ed>0?'<div style="font-size:11px;color:#E24B4A;margin-top:1px">долг: '+fmt(ed)+'</div>':'')
+        // Обновить шапку карточки
+        head.querySelector('.wt-right').innerHTML =
+          '<div class="wt-earn">'+fmt(m.e)+'</div>'
+          +(ed>0?'<div style="font-size:11px;color:#E24B4A;margin-top:1px">долг: '+fmt(ed)+'</div>':'<div style="font-size:11px;color:#1D9E75;margin-top:1px">всё выплачено ✓</div>')
           +(ep>0?'<div style="font-size:10px;color:#1D9E75;margin-top:1px">выплачено: '+fmt(ep)+'</div>':'');
+        // Обновить общий баннер
+        updateTabBanner(workers, mt, mp);
+        // Сбросить кнопку
         payBtn.textContent='Выплатить выбранные дни';
         payBtn.style.opacity='0.5';
+        payBtn.disabled=false;
+        // Перерисовать дни — оплаченные станут красными и заблокированными
         renderDays();
-        renderTabWorkers(workers,mt,mp);
-        toast(u.name+' — оплачено', false);
+        toast(u.name+' — выплачено '+fmt(ep+ed>0?selDays.reduce(function(s,dk){return s+(m.days[dk]?m.days[dk].e||0:0);},0):0), false);
       });
     };
 
