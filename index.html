@@ -492,9 +492,8 @@ function startWorker(scId){
   sty('work-av',CU.avS);
   sv('work-av',CU.init);
   renderTiles('work-tiles',r);
-  if(CU.role==='paint'){ loadBrakAlerts(); loadWbBrakAlerts(); }
-  // Загружать WB брак для всех рабочих (на случай кастомной роли маляра)
-  else { loadWbBrakAlerts(); }
+  loadBrakAlerts();
+  loadWbBrakAlerts();
   fbL.forEach(function(ref){try{ref.off();}catch(e){}});
   fbL=[];
   _todaySubscribedKey=tdk();
@@ -745,7 +744,7 @@ function bkSave(){
 
 // Загружать брак для маляра
 function loadBrakAlerts(){
-  if(!CU || CU.role!=='paint') return;
+  if(!CU) return;
   var el = document.getElementById('brak-alerts');
   if(!el) return;
   db.ref('brak').on('value', function(snap){
