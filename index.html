@@ -177,11 +177,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;backg
     <div onclick="goTab()" style="padding:14px 12px;border-radius:var(--r);border:0.5px solid var(--border);background:var(--card);cursor:pointer"><div style="font-size:20px;margin-bottom:6px">&#128203;</div><div style="font-size:13px;font-weight:500;color:var(--text)">Табель</div><div style="font-size:11px;color:var(--sub);margin-top:2px">зарплата · выплаты</div></div>
     <div onclick="goStock()" style="padding:14px 12px;border-radius:var(--r);border:0.5px solid var(--border);background:var(--card);cursor:pointer"><div style="font-size:20px;margin-bottom:6px">&#128230;</div><div style="font-size:13px;font-weight:500;color:var(--text)">Склад</div><div style="font-size:11px;color:var(--sub);margin-top:2px">готовая продукция</div></div>
     <div onclick="goMdf()" style="padding:14px 12px;border-radius:var(--r);border:0.5px solid var(--border);background:var(--card);cursor:pointer" id="mdf-nav-btn"><div style="font-size:20px;margin-bottom:6px">&#129683;</div><div style="font-size:13px;font-weight:500;color:var(--text)">МДФ</div><div style="font-size:11px;color:var(--sub);margin-top:2px" id="mdf-nav-sub">листы · расход</div></div>
+    <div onclick="goNotif()" style="padding:14px 12px;border-radius:var(--r);border:0.5px solid var(--border);background:var(--card);cursor:pointer"><div style="font-size:20px;margin-bottom:6px">&#128276;</div><div style="font-size:13px;font-weight:500;color:var(--text)">Новости</div><div style="font-size:11px;color:var(--sub);margin-top:2px">уведомления команде</div></div>
     <div onclick="goStaff()" style="padding:14px 12px;border-radius:var(--r);border:0.5px solid var(--border);background:var(--card);cursor:pointer"><div style="font-size:20px;margin-bottom:6px">&#9881;&#65039;</div><div style="font-size:13px;font-weight:500;color:var(--text)">Настройки</div><div style="font-size:11px;color:var(--sub);margin-top:2px">люди · задачи · роли</div></div>
   </div>
   <div style="height:8px"></div>
   </div>
 </div>
+<div class="screen" id="sc-notif"><div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-admin')">&#8249;</div><div style="flex:1"><div class="tb-title">Новости цеха</div><div class="tb-sub">все сотрудники увидят сверху</div></div></div><div class="scroll"><div style="padding:12px 16px"><textarea id="notif-text" placeholder="Напиши сообщение для всей команды..." style="width:100%;font-size:14px;padding:12px;border-radius:var(--rs);border:0.5px solid var(--border);background:var(--bg);color:var(--text);height:100px;resize:none;outline:none;font-family:inherit"></textarea><button onclick="sendNotif()" style="margin-top:8px;width:100%;padding:13px;background:var(--blue);color:white;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer">Отправить всем</button></div><div class="slbl">Отправленные</div><div id="notif-list" style="padding:0 16px 16px"></div></div></div>
 <div class="screen" id="sc-tab">
   <div class="topbar" style="gap:10px"><div class="back-btn" onclick="goScreen('sc-admin')">‹</div><div style="flex:1"><div class="tb-title">Табель — <span id="tab-month-lbl"></span></div><div class="tb-sub">нажми работника — по дням</div></div></div>
   <div class="scroll">
@@ -285,72 +287,60 @@ var ICOS=['🪑','🟤','⭐','🔶','🌿','💎','🌀','🔺','🎯','🟡'];
 var CU=null,selU=null,pinBuf='',opCtx={q:1,b:0,rate:50,uid:'',nm:'',ico:'🪑',stage:''},addYldV=4,addIcoIdx=0,addForRole='',admDayI=0,admDates=[],localTasks={},paidData={},fbL=[];
 function tdk(){return new Date().toISOString().slice(0,10);}
 window.addEventListener('load',function(){
-  var loaded = false;
+  var loaded=false;
   function finishLoad(){
-    if(loaded) return;
-    loaded = true;
+    if(loaded)return; loaded=true;
     var ldEl=document.getElementById('loading');
     ldEl.classList.add('hide');
     setTimeout(function(){ldEl.style.display='none';},500);
   }
-  // Таймаут — если Firebase не отвечает 5 сек, всё равно показываем экран
-  setTimeout(finishLoad, 5000);
+  setTimeout(finishLoad,5000);
 
-  // Загрузить задачи
-  db.ref('tasks').once('value').then(function(s){
-    var d = s.val() || {};
-    ['cnc','carp','sand','paint','pack'].forEach(function(r){
-      localTasks[r] = d[r] ? Object.values(d[r]) : [];
-    });
-  }).catch(function(){});
+  // Загружаем всё последовательно: роли -> задачи -> сотрудники
+  var avColors=['background:#E6F1FB;color:#0C447C','background:#E1F5EE;color:#085041','background:#FAEEDA;color:#633806','background:#FAECE7;color:#712B13','background:#EEEDFE;color:#534AB7','background:#FCEBEB;color:#A32D2D','background:#EAF3DE;color:#3B6D11'];
 
-  // Загрузить кастомные роли
+  // Шаг 1: кастомные роли
   db.ref('customRoles').once('value').then(function(snap){
-    var data = snap.val() || {};
+    var data=snap.val()||{};
     Object.keys(data).forEach(function(roleId){
-      ROLE[roleId] = data[roleId].name;
-      if(!localTasks[roleId]) localTasks[roleId] = [];
+      ROLE[roleId]=data[roleId].name;
     });
-  }).catch(function(){});
 
-  // Загрузить сотрудников из Firebase (перезаписать дефолтных)
-  db.ref('users').once('value').then(function(us){
-    var ud = us.val() || {};
-    var avColors = [
-      'background:#E6F1FB;color:#0C447C',
-      'background:#E1F5EE;color:#085041',
-      'background:#FAEEDA;color:#633806',
-      'background:#FAECE7;color:#712B13',
-      'background:#EEEDFE;color:#534AB7',
-      'background:#FCEBEB;color:#A32D2D',
-      'background:#EAF3DE;color:#3B6D11'
-    ];
-    // Обновить существующих
+    // Шаг 2: ВСЕ задачи (включая кастомные роли)
+    return db.ref('tasks').once('value');
+  }).then(function(s){
+    var d=s?s.val()||{}:{};
+    // Загрузить задачи для всех ролей что есть в Firebase
+    Object.keys(d).forEach(function(r){
+      localTasks[r]=Object.values(d[r]);
+    });
+    // Убедиться что все роли инициализированы
+    Object.keys(ROLE).forEach(function(r){
+      if(r!=='admin'&&!localTasks[r]) localTasks[r]=[];
+    });
+
+    // Шаг 3: сотрудники
+    return db.ref('users').once('value');
+  }).then(function(us){
+    var ud=us?us.val()||{}:{};
     USERS.forEach(function(u){
       if(ud[u.id]){
-        u.name = ud[u.id].name || u.name;
-        u.pin = ud[u.id].pin || u.pin;
-        u.role = ud[u.id].role || u.role;
-        u.init = u.name.slice(0,2).toUpperCase();
+        u.name=ud[u.id].name||u.name;
+        u.pin=ud[u.id].pin||u.pin;
+        u.role=ud[u.id].role||u.role;
+        u.init=u.name.slice(0,2).toUpperCase();
         delete ud[u.id];
       }
     });
-    // Добавить новых
     Object.keys(ud).forEach(function(uid){
-      var u = ud[uid];
-      if(u && u.name){
-        USERS.push({
-          id:uid, name:u.name,
-          init:u.name.slice(0,2).toUpperCase(),
-          role:u.role||'cnc', pin:u.pin||'0000',
-          avS:avColors[USERS.length % avColors.length]
-        });
+      var u=ud[uid];
+      if(u&&u.name){
+        USERS.push({id:uid,name:u.name,init:u.name.slice(0,2).toUpperCase(),role:u.role||'cnc',pin:u.pin||'0000',avS:avColors[USERS.length%avColors.length]});
       }
     });
     finishLoad();
-  }).catch(function(){ finishLoad(); });
+  }).catch(function(e){ console.log('load error:',e); finishLoad(); });
 });
-;
 
 var editIdx = -1;
 
@@ -494,6 +484,7 @@ function startWorker(scId){
   renderTiles('work-tiles',r);
   loadBrakAlerts();
   loadWbBrakAlerts();
+  loadActiveNotif();
   fbL.forEach(function(ref){try{ref.off();}catch(e){}});
   fbL=[];
   _todaySubscribedKey=tdk();
@@ -602,7 +593,8 @@ var etRole = '', etIdx = -1, etIcoIdx = 0, etYldV = 4;
 var atIcoIdx = 0, atYldV = 4, atRole = 'cnc';
 
 function goTaskMgr(){
-  tmgrRole = 'cnc';
+  var roles=Object.keys(ROLE).filter(function(r){return r!=='admin';});
+  tmgrRole=roles.length?roles[0]:'cnc';
   renderRoleTabs();
   renderMgrTiles();
   goScreen('sc-taskmgr');
@@ -1090,6 +1082,7 @@ function renderMdfHistory(){
         +'<div style="font-size:11px;color:var(--sub);margin-top:1px">'+(isIn?'Приход':'Расход: '+r.product)+' · '+r.date+'</div>'
         +'</div>'
         +'<div style="font-size:16px;font-weight:700;color:'+(isIn?'var(--green)':'var(--red)')+'">'+(isIn?'+':'-')+r.qty+' л</div>';
+      row.querySelector('.del-notif-btn').addEventListener('click',(function(nk){return function(){deleteNotif(nk);}})(k));
       el.appendChild(row);
     });
     el.style.paddingBottom = '8px';
@@ -1336,6 +1329,7 @@ function loadWbHistory(){
         +'<div style="font-size:14px;font-weight:700;color:'+(isGood?'var(--green)':'var(--red)')+'">'+op.pcs+' шт</div>'
         +(op.earn>0?'<div style="font-size:11px;color:var(--sub)">'+fmt(op.earn)+'</div>':'')
         +'</div>';
+      row.querySelector('.del-notif-btn').addEventListener('click',(function(nk){return function(){deleteNotif(nk);}})(k));
       el.appendChild(row);
     });
   });
@@ -1392,6 +1386,7 @@ function loadWbHistory(){
         +'<div style="text-align:right"><div style="font-size:14px;font-weight:700;color:'+(isGood?'var(--green)':'var(--red)')+'">'+r.qty+' шт</div>'
         +(r.earn?'<div style="font-size:11px;color:var(--sub)">'+fmt(r.earn)+'</div>':'')
         +'</div>';
+      row.querySelector('.del-notif-btn').addEventListener('click',(function(nk){return function(){deleteNotif(nk);}})(k));
       el.appendChild(row);
     });
   });
@@ -1640,6 +1635,73 @@ function wbfixSave(){
   db.ref('brak/'+wbFixKey+'/fixed').set(true);
   toast(wbFixNm+' · '+wbFixQty+' шт → склад · '+fmt(earn), false);
   closeOv();
+}
+
+function goNotif(){
+  goScreen('sc-notif');
+  loadNotifList();
+}
+
+function sendNotif(){
+  var txt=document.getElementById('notif-text').value.trim();
+  if(!txt) return;
+  var now=new Date();
+  var ts=now.toLocaleDateString('ru',{day:'numeric',month:'short'})+' '+now.toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
+  db.ref('notifications').push({text:txt,time:ts,from:'Администратор',active:true});
+  document.getElementById('notif-text').value='';
+  toast('Уведомление отправлено всем', false);
+  loadNotifList();
+}
+
+function loadNotifList(){
+  var el=document.getElementById('notif-list'); if(!el) return;
+  el.innerHTML='';
+  db.ref('notifications').limitToLast(20).once('value').then(function(snap){
+    var data=snap.val()||{};
+    var keys=Object.keys(data).reverse();
+    if(!keys.length){el.innerHTML='<div style="text-align:center;color:var(--ter);font-size:13px;padding:16px">Нет уведомлений</div>';return;}
+    keys.forEach(function(k){
+      var n=data[k];
+      var row=document.createElement('div');
+      row.style.cssText='background:var(--card);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;border:0.5px solid var(--border)';
+      row.innerHTML='<div style="font-size:13px;font-weight:500;color:var(--text)">'+n.text+'</div>'
+        +'<div style="display:flex;justify-content:space-between;margin-top:5px">'
+        +'<div style="font-size:10px;color:var(--ter)">'+n.time+'</div>'
+        +'<button class="del-notif-btn" style="font-size:10px;color:#E24B4A;background:none;border:none;cursor:pointer">Удалить</button>'
+        +'</div>';
+      row.querySelector('.del-notif-btn').addEventListener('click',(function(nk){return function(){deleteNotif(nk);}})(k));
+      el.appendChild(row);
+    });
+  });
+}
+
+function deleteNotif(key){
+  db.ref('notifications/'+key).remove();
+  loadNotifList();
+}
+
+function loadActiveNotif(){
+  // Загрузить последнее активное уведомление для рабочего
+  db.ref('notifications').orderByChild('active').equalTo(true).limitToLast(1).once('value').then(function(snap){
+    var data=snap.val()||{};
+    var keys=Object.keys(data);
+    if(!keys.length) return;
+    var n=data[keys[0]];
+    var banner=document.getElementById('notif-banner');
+    if(banner){
+      document.getElementById('notif-banner-txt').textContent=n.text;
+      banner.style.display='flex';
+      banner.dataset.key=keys[0];
+    }
+  }).catch(function(){});
+}
+
+function dismissNotif(el){
+  el.style.display='none';
+  // Можно пометить как прочитанное
+  if(el.dataset&&el.dataset.key){
+    db.ref('notifications/'+el.dataset.key+'/active').set(false);
+  }
 }
 function startAdmin(){admDayI=0;admDates=[];for(var i=0;i<30;i++){var d=new Date();d.setDate(d.getDate()-i);admDates.push(d.toISOString().slice(0,10));}renderAdmDay();}
 function admDay(d){admDayI=Math.max(0,Math.min(admDates.length-1,admDayI+d));renderAdmDay();}
